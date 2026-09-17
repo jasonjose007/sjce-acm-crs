@@ -416,6 +416,82 @@
     }
     .footer-back:hover { color:var(--blue); }
 
+    /* ── Tracker ── */
+    #tracker { background: var(--bg); border-top: 1px solid var(--border); }
+    .tracker-header { margin-bottom: 36px; }
+    .tracker-header .label { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:#10b981; font-weight:700; margin-bottom:12px; }
+    .tracker-header h2 { font-size:clamp(1.8rem,4vw,2.5rem); font-weight:900; letter-spacing:-.5px; margin-bottom:10px; }
+    .tracker-header p { font-size:.9rem; color:var(--muted); max-width:600px; }
+    .tracker-meta {
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:12px; margin-bottom:20px;
+    }
+    .tracker-legend { display:flex; gap:10px; flex-wrap:wrap; }
+    .legend-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); }
+    .legend-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+    .tracker-note {
+      display:flex; align-items:center; gap:8px;
+      font-size:12px; color:var(--muted);
+      background:rgba(16,185,129,.06); border:1px solid rgba(16,185,129,.15);
+      border-radius:8px; padding:8px 14px;
+    }
+    .tracker-table-wrap { overflow-x:auto; border-radius:16px; border:1px solid var(--border); }
+    table { width:100%; border-collapse:collapse; }
+    thead th {
+      background:var(--surface2); color:var(--muted);
+      font-size:10px; text-transform:uppercase; letter-spacing:1.2px;
+      padding:14px 16px; text-align:left; font-weight:700;
+      white-space:nowrap;
+    }
+    tbody tr { border-top:1px solid var(--border); transition:var(--t); }
+    tbody tr:hover { background:rgba(255,255,255,.02); }
+    td { padding:14px 16px; font-size:.875rem; color:var(--muted); vertical-align:middle; }
+    td.td-num { color:var(--dim); font-size:.8rem; font-weight:700; width:40px; }
+    td.td-company { font-weight:700; color:var(--text); }
+    .type-badge {
+      font-size:10px; font-weight:800; text-transform:uppercase;
+      letter-spacing:.8px; padding:3px 10px; border-radius:100px;
+      white-space:nowrap;
+    }
+    .tb-sponsor  { background:rgba(59,130,246,.12);  color:#93c5fd;  border:1px solid rgba(59,130,246,.25); }
+    .tb-speaker  { background:rgba(139,92,246,.12);  color:#c4b5fd;  border:1px solid rgba(139,92,246,.25); }
+    .tb-judge    { background:rgba(249,115,22,.12);   color:#fdba74;  border:1px solid rgba(249,115,22,.25); }
+    .tb-mentor   { background:rgba(6,182,212,.12);    color:#67e8f9;  border:1px solid rgba(6,182,212,.25); }
+    .tb-partner  { background:rgba(251,191,36,.12);   color:#fde68a;  border:1px solid rgba(251,191,36,.25); }
+    .status-badge {
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:10px; font-weight:800; text-transform:uppercase;
+      letter-spacing:.8px; padding:4px 11px; border-radius:100px;
+      white-space:nowrap;
+    }
+    .status-badge::before { content:''; width:6px;height:6px;border-radius:50%;flex-shrink:0; }
+    .sb-contacted   { background:rgba(59,130,246,.1);  color:#93c5fd;  border:1px solid rgba(59,130,246,.2); }
+    .sb-contacted::before   { background:#3b82f6; }
+    .sb-discussing  { background:rgba(251,191,36,.1);  color:#fde68a;  border:1px solid rgba(251,191,36,.2); }
+    .sb-discussing::before  { background:#fbbf24; }
+    .sb-confirmed   { background:rgba(16,185,129,.1);  color:#6ee7b7;  border:1px solid rgba(16,185,129,.2); }
+    .sb-confirmed::before   { background:#10b981; }
+    .sb-declined    { background:rgba(239,68,68,.1);   color:#fca5a5;  border:1px solid rgba(239,68,68,.2); }
+    .sb-declined::before    { background:#ef4444; }
+    .sb-pending     { background:rgba(100,116,139,.1); color:#94a3b8;  border:1px solid rgba(100,116,139,.2); }
+    .sb-pending::before     { background:#64748b; }
+    .followup-btn {
+      display:inline-flex; align-items:center; gap:5px;
+      font-size:11px; font-weight:700; color:var(--blue);
+      padding:4px 12px; border:1px solid rgba(59,130,246,.2);
+      border-radius:100px; text-decoration:none; transition:var(--t);
+      white-space:nowrap;
+    }
+    .followup-btn:hover { background:rgba(59,130,246,.1); border-color:var(--blue); text-decoration:none; }
+    .td-notes { font-size:.8rem; color:var(--dim); max-width:180px; }
+    .empty-row td { text-align:center; padding:48px; color:var(--dim); font-style:italic; }
+    .tracker-excel-note {
+      margin-top:16px; padding:14px 20px;
+      background:rgba(251,191,36,.05); border:1px dashed rgba(251,191,36,.2);
+      border-radius:12px; font-size:.825rem; color:var(--muted);
+      display:flex; align-items:center; gap:10px;
+    }
+
     @media(max-width:768px) {
       .mission-grid { grid-template-columns:1fr; gap:40px; }
       .contact-wrap { padding:40px 24px; }
@@ -443,7 +519,7 @@
       <span class="nav-dot"></span>
       CRS Team
     </div>
-    <a href="#contact" class="back-link">📬 Contact CRS</a>
+    <a href="#tracker" class="back-link">📋 Outreach Tracker</a>
   </div>
 </nav>
 
@@ -507,31 +583,38 @@
 
         <div class="mission-pillars">
           <div class="pillar reveal d1">
-            <div class="pillar-icon">🤝</div>
+            <div class="pillar-icon">🔍</div>
             <div>
-              <strong>Sponsorship Acquisition</strong>
-              <span>Approach and negotiate sponsorship deals with tech companies for chapter events</span>
+              <strong>Identify &amp; Approach Sponsors</strong>
+              <span>Find and reach out to potential sponsors and industry partners for chapter events and initiatives</span>
             </div>
           </div>
           <div class="pillar reveal d2">
-            <div class="pillar-icon">🏢</div>
+            <div class="pillar-icon">🎤</div>
             <div>
-              <strong>Industry Partnerships</strong>
-              <span>Build long-term relationships with companies that benefit our members consistently</span>
+              <strong>Coordinate Industry Professionals</strong>
+              <span>Connect with juries, judges, speakers, mentors, and other professionals for events</span>
             </div>
           </div>
           <div class="pillar reveal d3">
-            <div class="pillar-icon">💼</div>
+            <div class="pillar-icon">📨</div>
             <div>
-              <strong>Career Opportunities</strong>
-              <span>Organize company info sessions, career fairs, and internship pipelines for members</span>
+              <strong>Manage Communication &amp; Follow-ups</strong>
+              <span>Handle all outreach, responses, and ongoing communication with external organisations</span>
             </div>
           </div>
           <div class="pillar reveal d4">
-            <div class="pillar-icon">📢</div>
+            <div class="pillar-icon">🤝</div>
             <div>
-              <strong>Chapter Representation</strong>
-              <span>Represent SJCE ACM professionally to the outside world and grow our brand</span>
+              <strong>Support Sponsorships &amp; Collaborations</strong>
+              <span>Back sponsorships, industry tie-ups, and external requirements for all chapter activities</span>
+            </div>
+          </div>
+          <div class="pillar reveal d4">
+            <div class="pillar-icon">🔗</div>
+            <div>
+              <strong>Maintain Professional Connections</strong>
+              <span>Nurture long-term relationships with contacts for future events and initiatives</span>
             </div>
           </div>
         </div>
@@ -643,28 +726,130 @@
     <div class="resp-grid">
       <div class="resp-card rc-1 reveal d1">
         <div class="resp-num">01</div>
-        <div class="resp-icon">💰</div>
-        <div class="resp-title">Sponsorship Management</div>
-        <p class="resp-desc">Identify prospective sponsors, craft tailored sponsorship proposals, and negotiate agreements that fund the chapter's events, equipment, and member activities.</p>
+        <div class="resp-icon">🔍</div>
+        <div class="resp-title">Identify &amp; Approach Sponsors</div>
+        <p class="resp-desc">Actively research and reach out to potential sponsors and industry partners whose interests align with the chapter's events and initiatives.</p>
       </div>
       <div class="resp-card rc-2 reveal d2">
         <div class="resp-num">02</div>
-        <div class="resp-icon">🏢</div>
-        <div class="resp-title">Industry Partnership Building</div>
-        <p class="resp-desc">Build and maintain long-term relationships with companies — tech startups, MNCs, and local firms — so that SJCE ACM is a known and respected name in the industry.</p>
+        <div class="resp-icon">🎤</div>
+        <div class="resp-title">Coordinate Industry Professionals</div>
+        <p class="resp-desc">Liaise with juries, judges, speakers, and mentors — handling invitations, logistics, and on-day coordination for all chapter events.</p>
       </div>
       <div class="resp-card rc-3 reveal d3">
         <div class="resp-num">03</div>
-        <div class="resp-icon">🎤</div>
-        <div class="resp-title">Company Events &amp; Info Sessions</div>
-        <p class="resp-desc">Organize company-led workshops, recruitment info sessions, and technical talks where industry professionals engage directly with our members on campus.</p>
+        <div class="resp-icon">📨</div>
+        <div class="resp-title">Communication &amp; Follow-ups</div>
+        <p class="resp-desc">Own all outreach correspondence — timely follow-ups, updates, and professional communication with every external organisation and individual contacted.</p>
       </div>
       <div class="resp-card rc-4 reveal d4">
         <div class="resp-num">04</div>
-        <div class="resp-icon">🚀</div>
-        <div class="resp-title">Internship &amp; Career Pipelines</div>
-        <p class="resp-desc">Work with partner companies to create dedicated pathways for SJCE ACM members to access internships, referrals, and early-stage career opportunities before the general pool.</p>
+        <div class="resp-icon">🤝</div>
+        <div class="resp-title">Support Sponsorships &amp; Collaborations</div>
+        <p class="resp-desc">Back every chapter activity that needs external support — from financial sponsorships and product partnerships to co-branded industry collaborations.</p>
       </div>
+      <div class="resp-card rc-1 reveal d4">
+        <div class="resp-num">05</div>
+        <div class="resp-icon">🔗</div>
+        <div class="resp-title">Maintain Professional Connections</div>
+        <p class="resp-desc">Keep the relationship alive beyond a single event — building a lasting network that the chapter can rely on for every future initiative and opportunity.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TRACKER ── -->
+<section id="tracker" class="section">
+  <div class="container">
+    <div class="tracker-header reveal">
+      <p class="label">Outreach Tracker</p>
+      <h2>Sponsor &amp; Contact <span class="gt2">Tracker</span></h2>
+      <p>A live record of every company, speaker, judge, and mentor the CRS team has reached out to. Keep this updated after every contact so the whole team stays in sync.</p>
+    </div>
+
+    <div class="tracker-meta reveal">
+      <div class="tracker-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div> Contacted</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#fbbf24"></div> In Discussion</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> Confirmed</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> Declined</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#64748b"></div> Pending</div>
+      </div>
+      <div class="tracker-note">📬 Click <strong>Follow Up</strong> to open a draft email to that contact</div>
+    </div>
+
+    <div class="tracker-table-wrap reveal">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Company / Organisation</th>
+            <th>Type</th>
+            <th>Contact Person</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Notes</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- ── Placeholder rows — replace with Excel data ── -->
+          <tr>
+            <td class="td-num">01</td>
+            <td class="td-company">—</td>
+            <td><span class="type-badge tb-sponsor">Sponsor</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="status-badge sb-pending">Pending</span></td>
+            <td class="td-notes">—</td>
+            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">✉ Follow Up</a></td>
+          </tr>
+          <tr>
+            <td class="td-num">02</td>
+            <td class="td-company">—</td>
+            <td><span class="type-badge tb-speaker">Speaker</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="status-badge sb-pending">Pending</span></td>
+            <td class="td-notes">—</td>
+            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">✉ Follow Up</a></td>
+          </tr>
+          <tr>
+            <td class="td-num">03</td>
+            <td class="td-company">—</td>
+            <td><span class="type-badge tb-judge">Judge</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="status-badge sb-pending">Pending</span></td>
+            <td class="td-notes">—</td>
+            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">✉ Follow Up</a></td>
+          </tr>
+          <tr>
+            <td class="td-num">04</td>
+            <td class="td-company">—</td>
+            <td><span class="type-badge tb-mentor">Mentor</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="status-badge sb-pending">Pending</span></td>
+            <td class="td-notes">—</td>
+            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">✉ Follow Up</a></td>
+          </tr>
+          <tr>
+            <td class="td-num">05</td>
+            <td class="td-company">—</td>
+            <td><span class="type-badge tb-partner">Partner</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="status-badge sb-pending">Pending</span></td>
+            <td class="td-notes">—</td>
+            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">✉ Follow Up</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tracker-excel-note reveal">
+      📊 <span><strong>Excel data incoming.</strong> Share your spreadsheet and this tracker will be populated with real company names, contacts, dates and statuses.</span>
     </div>
   </div>
 </section>
