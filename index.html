@@ -391,6 +391,9 @@
       transition: var(--t); cursor:pointer;
     }
     .contact-method:hover { border-color: var(--blue); transform: translateY(-3px); }
+    .contact-method:hover .cm-value { color: var(--blue); }
+    .contact-method .cm-arrow { font-size:14px; margin-left:auto; opacity:0; transition:var(--t); color:var(--blue); }
+    .contact-method:hover .cm-arrow { opacity:1; transform:translateX(3px); }
     .cm-icon { font-size:22px; }
     .cm-body { text-align:left; }
     .cm-label { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); }
@@ -866,9 +869,10 @@
         <a class="contact-method" href="mailto:stjosephsacmcrs@gmail.com" style="text-decoration:none;">
           <div class="cm-icon">✉️</div>
           <div class="cm-body">
-            <div class="cm-label">Email</div>
+            <div class="cm-label">Email Us</div>
             <div class="cm-value">stjosephsacmcrs@gmail.com</div>
           </div>
+          <div class="cm-arrow">→</div>
         </a>
         <a class="contact-method" href="https://www.linkedin.com/company/association-for-computing-machinery-sjce-chapter/" target="_blank" rel="noopener" style="text-decoration:none;">
           <div class="cm-icon">💼</div>
@@ -876,6 +880,7 @@
             <div class="cm-label">LinkedIn</div>
             <div class="cm-value">ACM SJCE Chapter</div>
           </div>
+          <div class="cm-arrow">↗</div>
         </a>
         <a class="contact-method" href="https://www.instagram.com/acm_sjce" target="_blank" rel="noopener" style="text-decoration:none;">
           <div class="cm-icon">📸</div>
@@ -883,6 +888,7 @@
             <div class="cm-label">Instagram</div>
             <div class="cm-value">@acm_sjce</div>
           </div>
+          <div class="cm-arrow">↗</div>
         </a>
       </div>
 
