@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRS Team — SJCE ACM Student Chapter</title>
+  <meta name="description" content="Corporate Relations & Sponsorships team of the SJCE ACM Student Chapter. Bridging students with industry." />
+  <style>
+    /* ── Variables ── */
+    :root {
+      --bg:       #07091a;
+      --surface:  #0d1228;
+      --surface2: #111830;
+      --border:   #1a2340;
+      --blue:     #3b82f6;
+      --indigo:   #6366f1;
+      --violet:   #8b5cf6;
+      --cyan:     #06b6d4;
+      --text:     #eef2ff;
+      --muted:    #8898b8;
+      --dim:      #3d4f72;
+      --t:        0.3s cubic-bezier(.4,0,.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Scroll reveal ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .d1 { transition-delay: .1s; } .d2 { transition-delay: .2s; }
+    .d3 { transition-delay: .3s; } .d4 { transition-delay: .4s; } .d5 { transition-delay: .5s; }
+
+    /* ── Util ── */
+    .container { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+    .section    { padding: 96px 0; }
+    .gt  { background: linear-gradient(135deg, var(--blue), var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .gt2 { background: linear-gradient(135deg, var(--cyan), var(--blue));   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* ── Navbar ── */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 14px 0;
+      transition: var(--t);
+    }
+    #nav.scrolled {
+      background: rgba(7,9,26,.92);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+    .nav-brand  { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-logo {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 16px; color: #fff;
+    }
+    .nav-title { font-size: 14px; font-weight: 800; color: var(--text); line-height: 1.2; }
+    .nav-title small { display: block; font-size: 10px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; }
+    .nav-crs-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(59,130,246,.1);
+      border: 1px solid rgba(59,130,246,.25);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 13px; font-weight: 700; color: #93c5fd;
+    }
+    .nav-dot { width: 7px; height: 7px; background: var(--blue); border-radius: 50%; animation: pulse 2s ease infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .back-link {
+      font-size: 13px; color: var(--muted); text-decoration: none;
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border: 1px solid var(--border);
+      border-radius: 100px; transition: var(--t);
+    }
+    .back-link:hover { color: var(--text); border-color: var(--blue); }
+
+    /* ── Hero ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      position: relative; overflow: hidden;
+      padding-top: 80px;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 15% 40%, rgba(59,130,246,.14) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 85% 20%, rgba(139,92,246,.1) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 70% 80%, rgba(6,182,212,.07) 0%, transparent 60%);
+      animation: bgShift 10s ease-in-out infinite alternate;
+    }
+    @keyframes bgShift { 0%{opacity:.7;transform:scale(1)} 100%{opacity:1;transform:scale(1.04)} }
+    .hero-grid-dots {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+    /* Floating orbs */
+    .orb {
+      position: absolute; border-radius: 50%; filter: blur(60px);
+      animation: drift linear infinite;
+    }
+    .orb1 { width:320px;height:320px;background:rgba(59,130,246,.06); top:-80px;right:-60px; animation-duration:22s; }
+    .orb2 { width:200px;height:200px;background:rgba(139,92,246,.05); bottom:10%;left:-40px; animation-duration:28s;animation-delay:-8s; }
+    .orb3 { width:140px;height:140px;background:rgba(6,182,212,.05); top:35%;right:12%; animation-duration:18s;animation-delay:-4s; }
+    @keyframes drift {
+      0%   { transform:translate(0,0) scale(1); }
+      33%  { transform:translate(20px,-15px) scale(1.05); }
+      66%  { transform:translate(-15px,20px) scale(.95); }
+      100% { transform:translate(0,0) scale(1); }
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(59,130,246,.08);
+      border: 1px solid rgba(59,130,246,.2);
+      border-radius: 100px; padding: 7px 18px;
+      font-size: 13px; font-weight: 700; color: #93c5fd;
+      margin-bottom: 28px;
+    }
+    .hero-tag {
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .hero-h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 900; line-height: 1.0;
+      letter-spacing: -2.5px;
+      margin-bottom: 10px;
+    }
+    .hero-sub {
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      font-weight: 700; color: var(--muted);
+      margin-bottom: 28px; letter-spacing: -.3px;
+    }
+    .hero-desc {
+      font-size: 1.05rem; color: var(--muted);
+      max-width: 540px; margin-bottom: 44px; line-height: 1.75;
+    }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 64px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 28px; border-radius: 100px;
+      font-size: 14px; font-weight: 700;
+      border: none; cursor: pointer;
+      transition: var(--t); text-decoration: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(59,130,246,.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(59,130,246,.45); color:#fff; text-decoration:none; }
+    .btn-ghost {
+      background: transparent; color: var(--text);
+      border: 1.5px solid rgba(255,255,255,.15);
+    }
+    .btn-ghost:hover { border-color: var(--blue); color: var(--blue); transform: translateY(-2px); text-decoration:none; }
+
+    .hero-meta { display: flex; gap: 36px; flex-wrap: wrap; }
+    .hero-meta-item { }
+    .hero-meta-num {
+      font-size: 2.2rem; font-weight: 900;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1;
+    }
+    .hero-meta-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
+
+    .scroll-hint {
+      position: absolute; bottom: 32px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: var(--dim); font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      animation: bob 2.5s ease-in-out infinite;
+    }
+    .scroll-arrow { width: 20px;height:20px; border-right:2px solid var(--dim); border-bottom:2px solid var(--dim); transform:rotate(45deg); }
+    @keyframes bob { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+
+    /* ── Mission ── */
+    #mission { background: var(--surface); border-top: 1px solid var(--border); }
+    .mission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .mission-text .label { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--blue); font-weight:700; margin-bottom:12px; }
+    .mission-text h2 { font-size: clamp(1.7rem,3.5vw,2.4rem); font-weight:900; line-height:1.2; letter-spacing:-.5px; margin-bottom:20px; }
+    .mission-text p { color: var(--muted); margin-bottom:16px; font-size:.98rem; }
+    .mission-pillars { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+    .pillar {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 16px 18px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      transition: var(--t);
+    }
+    .pillar:hover { border-color: var(--blue); transform: translateX(5px); }
+    .pillar-icon {
+      width: 38px; height: 38px; flex-shrink:0;
+      background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2);
+      border-radius: 9px; display:flex; align-items:center; justify-content:center;
+      font-size: 18px;
+    }
+    .pillar strong { display:block; font-size:.88rem; font-weight:800; margin-bottom:2px; }
+    .pillar span   { font-size:.8rem; color:var(--muted); }
+
+    /* Big CRS visual card */
+    .crs-visual {
+      background: linear-gradient(135deg, rgba(59,130,246,.08), rgba(139,92,246,.08));
+      border: 1px solid rgba(59,130,246,.2);
+      border-radius: 24px;
+      padding: 40px 36px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .crs-visual::before {
+      content:'';
+      position:absolute; inset:0;
+      background: radial-gradient(circle at 50% 0%, rgba(59,130,246,.1), transparent 60%);
+    }
+    .crs-big-icon {
+      font-size: 72px; margin-bottom: 20px;
+      position: relative; z-index:1;
+      animation: wiggle 4s ease-in-out infinite;
+    }
+    @keyframes wiggle {
+      0%,100%{transform:rotate(-3deg) scale(1)}
+      50%{transform:rotate(3deg) scale(1.05)}
+    }
+    .crs-visual h3 { font-size:1.5rem; font-weight:900; margin-bottom:8px; position:relative;z-index:1; }
+    .crs-visual p  { font-size:.875rem; color:var(--muted); margin-bottom:24px; position:relative;z-index:1; }
+    .crs-chips { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; position:relative;z-index:1; }
+    .chip {
+      font-size:11px; font-weight:700; padding:5px 14px;
+      border-radius:100px; text-transform:uppercase; letter-spacing:.8px;
+    }
+    .chip-blue   { background:rgba(59,130,246,.12); color:#93c5fd; border:1px solid rgba(59,130,246,.25); }
+    .chip-violet { background:rgba(139,92,246,.12); color:#c4b5fd; border:1px solid rgba(139,92,246,.25); }
+    .chip-cyan   { background:rgba(6,182,212,.12);  color:#67e8f9; border:1px solid rgba(6,182,212,.25); }
+    .chip-green  { background:rgba(16,185,129,.12); color:#6ee7b7; border:1px solid rgba(16,185,129,.25); }
+
+    /* ── Team ── */
+    #team { background: var(--bg); border-top: 1px solid var(--border); }
+    .team-section-header { text-align: center; margin-bottom: 60px; }
+    .team-section-header .label { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--cyan); font-weight:700; margin-bottom:12px; }
+    .team-section-header h2 { font-size:clamp(1.8rem,4vw,2.6rem); font-weight:900; letter-spacing:-.5px; }
+
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+
+    /* Lead card — bigger */
+    .member-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 20px;
+      text-align: center;
+      transition: var(--t);
+      position: relative; overflow: hidden;
+    }
+    .member-card::before {
+      content:''; position:absolute;
+      top:0;left:0;right:0;height:4px;
+      background: var(--card-accent);
+    }
+    .member-card:hover { transform: translateY(-8px); box-shadow: 0 16px 48px rgba(0,0,0,.5); border-color: var(--card-border); }
+
+    /* Lead card styling */
+    .card-lead {
+      --card-accent: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+      --card-border: rgba(59,130,246,.4);
+      grid-column: 1 / -1; /* full width on its own */
+      max-width: 320px; margin: 0 auto;
+    }
+    @media (min-width: 640px) {
+      .team-grid { grid-template-columns: repeat(4, 1fr); }
+      .card-lead { grid-column: span 4; max-width: 260px; margin: 0; }
+    }
+    @media (min-width: 900px) {
+      .team-grid { grid-template-columns: repeat(5, 1fr); }
+      .card-lead { grid-column: span 1; max-width: none; margin: 0; }
+    }
+
+    .card-member { --card-accent: linear-gradient(90deg, #1e3a5f, #2d4a8a); --card-border: rgba(59,130,246,.2); }
+
+    .lead-crown {
+      position: absolute; top: 14px; right: 14px;
+      font-size: 14px; opacity: .7;
+    }
+    .member-avatar {
+      width: 68px; height: 68px;
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 900; color: #fff;
+      position: relative;
+    }
+    .av-lead {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      box-shadow: 0 0 0 3px rgba(59,130,246,.2), 0 0 28px rgba(59,130,246,.3);
+    }
+    .av-m1 { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+    .av-m2 { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
+    .av-m3 { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+    .av-m4 { background: linear-gradient(135deg, #10b981, #06b6d4); }
+
+    .member-role { font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:6px; }
+    .member-name { font-size:.95rem; font-weight:800; margin-bottom:10px; }
+    .card-lead .member-name { font-size:1.05rem; }
+    .member-skills { display:flex; flex-wrap:wrap; justify-content:center; gap:5px; margin-top:10px; }
+    .skill {
+      font-size:10px; font-weight:700;
+      padding:3px 9px; border-radius:100px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--muted); letter-spacing:.3px;
+    }
+    .lead-tag {
+      display:inline-block;
+      font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:1px;
+      padding:3px 12px; border-radius:100px;
+      background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(139,92,246,.15));
+      border:1px solid rgba(59,130,246,.3); color:#93c5fd;
+    }
+
+    /* ── Responsibilities ── */
+    #responsibilities { background: var(--surface); border-top: 1px solid var(--border); }
+    .resp-header { text-align:center; margin-bottom:56px; }
+    .resp-header .label { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--violet); font-weight:700; margin-bottom:12px; }
+    .resp-header h2 { font-size:clamp(1.8rem,4vw,2.5rem); font-weight:900; letter-spacing:-.5px; }
+
+    .resp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+    .resp-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px;
+      transition: var(--t);
+      position: relative; overflow: hidden;
+    }
+    .resp-card:hover { transform: translateY(-5px); }
+    .resp-card::after {
+      content:''; position:absolute; inset:0;
+      background: radial-gradient(circle at top left, var(--rc-glow), transparent 65%);
+      opacity: 0; transition: var(--t);
+    }
+    .resp-card:hover::after { opacity: 1; }
+    .rc-1 { --rc-glow: rgba(59,130,246,.06); }  .rc-1:hover { border-color: rgba(59,130,246,.35); }
+    .rc-2 { --rc-glow: rgba(139,92,246,.06); }  .rc-2:hover { border-color: rgba(139,92,246,.35); }
+    .rc-3 { --rc-glow: rgba(6,182,212,.06); }   .rc-3:hover { border-color: rgba(6,182,212,.35); }
+    .rc-4 { --rc-glow: rgba(16,185,129,.06); }  .rc-4:hover { border-color: rgba(16,185,129,.35); }
+
+    .resp-num { font-size:11px; font-weight:800; color:var(--dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+    .resp-icon { font-size:32px; margin-bottom:14px; position:relative; z-index:1; }
+    .resp-title { font-size:1rem; font-weight:900; margin-bottom:10px; position:relative; z-index:1; }
+    .resp-desc { font-size:.86rem; color:var(--muted); line-height:1.65; position:relative; z-index:1; }
+
+    /* ── Contact ── */
+    #contact { background: var(--bg); border-top: 1px solid var(--border); }
+    .contact-wrap {
+      background: linear-gradient(135deg, rgba(59,130,246,.07), rgba(139,92,246,.07));
+      border: 1px solid rgba(59,130,246,.2);
+      border-radius: 28px;
+      padding: 64px 48px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .contact-wrap::before {
+      content:''; position:absolute; inset:0;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(59,130,246,.1), transparent 60%);
+    }
+    .contact-wrap > * { position: relative; z-index: 1; }
+    .contact-wrap .label { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:#93c5fd; font-weight:700; margin-bottom:14px; }
+    .contact-wrap h2 { font-size:clamp(1.8rem,4vw,2.8rem); font-weight:900; letter-spacing:-.5px; margin-bottom:14px; }
+    .contact-wrap p { color:var(--muted); max-width:500px; margin:0 auto 36px; }
+    .contact-methods { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:40px; }
+    .contact-method {
+      display:flex; align-items:center; gap:12px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius:14px; padding:16px 22px;
+      transition: var(--t); cursor:pointer;
+    }
+    .contact-method:hover { border-color: var(--blue); transform: translateY(-3px); }
+    .cm-icon { font-size:22px; }
+    .cm-body { text-align:left; }
+    .cm-label { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); }
+    .cm-value { font-size:.875rem; font-weight:700; color:var(--text); }
+    .team-tag-row { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; font-size:.8rem; color:var(--muted); }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+    }
+    .footer-inner {
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:16px;
+    }
+    .footer-left p { font-size:.8rem; color:var(--dim); }
+    .footer-left p span { color:var(--muted); }
+    .footer-back {
+      display:flex; align-items:center; gap:8px;
+      font-size:.8rem; color:var(--muted);
+      text-decoration:none; transition:var(--t);
+    }
+    .footer-back:hover { color:var(--blue); }
+
+    @media(max-width:768px) {
+      .mission-grid { grid-template-columns:1fr; gap:40px; }
+      .contact-wrap { padding:40px 24px; }
+      .section { padding:70px 0; }
+    }
+    @media(max-width:480px) {
+      .hero-btns { flex-direction:column; align-items:flex-start; }
+      .hero-meta { gap:22px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <div class="container nav-inner">
+    <a href="#hero" class="nav-brand">
+      <div class="nav-logo">A</div>
+      <div class="nav-title">
+        SJCE ACM
+        <small>Student Chapter</small>
+      </div>
+    </a>
+    <div class="nav-crs-badge">
+      <span class="nav-dot"></span>
+      CRS Team
+    </div>
+    <a href="#contact" class="back-link">📬 Contact CRS</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-dots"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <div class="container hero-content">
+    <div class="hero-eyebrow reveal">
+      <span class="nav-dot"></span>
+      SJCE ACM Student Chapter · Sub-Team
+    </div>
+    <h1 class="hero-h1 reveal d1">
+      <span class="gt">CRS</span>
+    </h1>
+    <p class="hero-sub reveal d2">Corporate Relations &amp; Sponsorships</p>
+    <p class="hero-desc reveal d2">
+      The bridge between St. Joseph's College of Engineering and the tech industry.
+      We build partnerships, secure sponsorships, and create real-world opportunities
+      that land directly in the hands of our chapter members.
+    </p>
+    <div class="hero-btns reveal d3">
+      <a href="#team" class="btn btn-primary">👥 Meet the Team</a>
+      <a href="#contact" class="btn btn-ghost">📬 Get in Touch</a>
+    </div>
+    <div class="hero-meta reveal d4">
+      <div class="hero-meta-item">
+        <div class="hero-meta-num">5</div>
+        <div class="hero-meta-label">Team Members</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="hero-meta-num">∞</div>
+        <div class="hero-meta-label">Opportunities</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="hero-meta-num">1</div>
+        <div class="hero-meta-label">Shared Goal</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ── MISSION ── -->
+<section id="mission" class="section">
+  <div class="container">
+    <div class="mission-grid">
+
+      <div class="mission-text reveal">
+        <p class="label">What We Do</p>
+        <h2>Industry Isn't Out There.<br><span class="gt">We Bring It Here.</span></h2>
+        <p>The CRS team is the chapter's frontline with the professional world. We identify companies that align with our members' interests, approach them with compelling proposals, and build lasting partnerships that go beyond a single event.</p>
+        <p>From securing financial sponsorships for hackathons to arranging exclusive company visits and internship pipelines — CRS turns industry connections into real opportunities for SJCE students.</p>
+
+        <div class="mission-pillars">
+          <div class="pillar reveal d1">
+            <div class="pillar-icon">🤝</div>
+            <div>
+              <strong>Sponsorship Acquisition</strong>
+              <span>Approach and negotiate sponsorship deals with tech companies for chapter events</span>
+            </div>
+          </div>
+          <div class="pillar reveal d2">
+            <div class="pillar-icon">🏢</div>
+            <div>
+              <strong>Industry Partnerships</strong>
+              <span>Build long-term relationships with companies that benefit our members consistently</span>
+            </div>
+          </div>
+          <div class="pillar reveal d3">
+            <div class="pillar-icon">💼</div>
+            <div>
+              <strong>Career Opportunities</strong>
+              <span>Organize company info sessions, career fairs, and internship pipelines for members</span>
+            </div>
+          </div>
+          <div class="pillar reveal d4">
+            <div class="pillar-icon">📢</div>
+            <div>
+              <strong>Chapter Representation</strong>
+              <span>Represent SJCE ACM professionally to the outside world and grow our brand</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="crs-visual reveal d2">
+        <div class="crs-big-icon">🤝</div>
+        <h3>Corporate Relations<br>&amp; <span class="gt">Sponsorships</span></h3>
+        <p>Where student ambition meets industry opportunity.</p>
+        <div class="crs-chips">
+          <span class="chip chip-blue">Sponsorships</span>
+          <span class="chip chip-violet">Partnerships</span>
+          <span class="chip chip-cyan">Career Fairs</span>
+          <span class="chip chip-green">Industry Talks</span>
+          <span class="chip chip-blue">Company Visits</span>
+          <span class="chip chip-violet">Internship Pipelines</span>
+          <span class="chip chip-cyan">Proposals</span>
+          <span class="chip chip-green">Networking</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── TEAM ── -->
+<section id="team" class="section">
+  <div class="container">
+    <div class="team-section-header reveal">
+      <p class="label">The People Behind It</p>
+      <h2>Meet the <span class="gt2">CRS Team</span></h2>
+    </div>
+
+    <div class="team-grid">
+
+      <!-- Jason J — Lead -->
+      <div class="member-card card-lead reveal d1">
+        <div class="member-avatar av-lead">JJ</div>
+        <div class="member-role">Team Lead</div>
+        <div class="member-name">Jason J</div>
+        <span class="lead-tag">CRS Lead</span>
+        <div class="member-skills">
+          <span class="skill">Negotiation</span>
+          <span class="skill">Strategic Planning</span>
+          <span class="skill">Relationship Mgmt</span>
+        </div>
+      </div>
+
+      <!-- Kaniska Praba -->
+      <div class="member-card card-member reveal d2">
+        <div class="member-avatar av-m1">KP</div>
+        <div class="member-role">CRS Member</div>
+        <div class="member-name">Kaniska Praba</div>
+        <div class="member-skills">
+          <span class="skill">Market Research</span>
+          <span class="skill">Cold Outreach</span>
+          <span class="skill">Communication</span>
+        </div>
+      </div>
+
+      <!-- Harini S -->
+      <div class="member-card card-member reveal d3">
+        <div class="member-avatar av-m2">HS</div>
+        <div class="member-role">CRS Member</div>
+        <div class="member-name">Harini S</div>
+        <div class="member-skills">
+          <span class="skill">Sponsorship Decks</span>
+          <span class="skill">LinkedIn Outreach</span>
+          <span class="skill">Content Writing</span>
+        </div>
+      </div>
+
+      <!-- Patricia Mary G -->
+      <div class="member-card card-member reveal d4">
+        <div class="member-avatar av-m3">PM</div>
+        <div class="member-role">CRS Member</div>
+        <div class="member-name">Patricia Mary G</div>
+        <div class="member-skills">
+          <span class="skill">Client Relations</span>
+          <span class="skill">Event Coordination</span>
+          <span class="skill">Partner Tracking</span>
+        </div>
+      </div>
+
+      <!-- Vignesh -->
+      <div class="member-card card-member reveal d5">
+        <div class="member-avatar av-m4">V</div>
+        <div class="member-role">CRS Member</div>
+        <div class="member-name">Vignesh</div>
+        <div class="member-skills">
+          <span class="skill">Brand Pitching</span>
+          <span class="skill">Networking</span>
+          <span class="skill">Corporate Comms</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── RESPONSIBILITIES ── -->
+<section id="responsibilities" class="section">
+  <div class="container">
+    <div class="resp-header reveal">
+      <p class="label">Our Work</p>
+      <h2>What <span class="gt">CRS</span> Owns</h2>
+    </div>
+
+    <div class="resp-grid">
+      <div class="resp-card rc-1 reveal d1">
+        <div class="resp-num">01</div>
+        <div class="resp-icon">💰</div>
+        <div class="resp-title">Sponsorship Management</div>
+        <p class="resp-desc">Identify prospective sponsors, craft tailored sponsorship proposals, and negotiate agreements that fund the chapter's events, equipment, and member activities.</p>
+      </div>
+      <div class="resp-card rc-2 reveal d2">
+        <div class="resp-num">02</div>
+        <div class="resp-icon">🏢</div>
+        <div class="resp-title">Industry Partnership Building</div>
+        <p class="resp-desc">Build and maintain long-term relationships with companies — tech startups, MNCs, and local firms — so that SJCE ACM is a known and respected name in the industry.</p>
+      </div>
+      <div class="resp-card rc-3 reveal d3">
+        <div class="resp-num">03</div>
+        <div class="resp-icon">🎤</div>
+        <div class="resp-title">Company Events &amp; Info Sessions</div>
+        <p class="resp-desc">Organize company-led workshops, recruitment info sessions, and technical talks where industry professionals engage directly with our members on campus.</p>
+      </div>
+      <div class="resp-card rc-4 reveal d4">
+        <div class="resp-num">04</div>
+        <div class="resp-icon">🚀</div>
+        <div class="resp-title">Internship &amp; Career Pipelines</div>
+        <p class="resp-desc">Work with partner companies to create dedicated pathways for SJCE ACM members to access internships, referrals, and early-stage career opportunities before the general pool.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact" class="section">
+  <div class="container">
+    <div class="contact-wrap reveal">
+      <p class="label">Work With Us</p>
+      <h2>Want to <span class="gt">Partner</span> with SJCE ACM?</h2>
+      <p>Whether you're a company looking to sponsor an event, a recruiter who wants to connect with top students, or a professional who'd like to give a talk — the CRS team wants to hear from you.</p>
+
+      <div class="contact-methods">
+        <div class="contact-method">
+          <div class="cm-icon">✉️</div>
+          <div class="cm-body">
+            <div class="cm-label">Email</div>
+            <div class="cm-value">acm@sjce.ac.in</div>
+          </div>
+        </div>
+        <div class="contact-method">
+          <div class="cm-icon">💼</div>
+          <div class="cm-body">
+            <div class="cm-label">LinkedIn</div>
+            <div class="cm-value">SJCE ACM Chapter</div>
+          </div>
+        </div>
+        <div class="contact-method">
+          <div class="cm-icon">📸</div>
+          <div class="cm-body">
+            <div class="cm-label">Instagram</div>
+            <div class="cm-value">@sjce_acm</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="team-tag-row">
+        <span>CRS Team ·</span>
+        <span>Jason J</span>
+        <span>·</span>
+        <span>Kaniska Praba</span>
+        <span>·</span>
+        <span>Harini S</span>
+        <span>·</span>
+        <span>Patricia Mary G</span>
+        <span>·</span>
+        <span>Vignesh</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="container footer-inner">
+    <div class="footer-left">
+      <p>© 2026 <span>SJCE ACM Student Chapter</span> — CRS Team</p>
+      <p style="margin-top:4px;">St. Joseph's College of Engineering · Chennai</p>
+    </div>
+    <a href="#hero" class="footer-back">↑ Back to Top</a>
+  </div>
+</footer>
+
+<script>
+  /* Navbar scroll */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 50));
+
+  /* Scroll reveal */
+  const obs = new IntersectionObserver(
+    entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+    { threshold: 0.12 }
+  );
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
