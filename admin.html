@@ -176,11 +176,14 @@ td.td-company{font-weight:700;color:var(--text);}
 
 <!-- Navbar -->
 <nav id="navbar">
-  <a href="#" class="nav-brand">
+  <a href="index.html" class="nav-brand" style="text-decoration:none;">
     <div class="nav-logo">A</div>
     <div class="nav-title">SJCE ACM · CRS<small>Admin Dashboard</small></div>
   </a>
-  <span class="admin-badge">⚡ Admin</span>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <span class="admin-badge">⚡ Admin</span>
+    <a href="member.html" style="font-size:12px;font-weight:700;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:4px 12px;text-decoration:none;transition:var(--t);">📋 Member View</a>
+  </div>
   <div class="nav-right">
     <div id="nav-avatar"></div>
     <span id="nav-name" class="nav-name" style="font-size:13px;font-weight:700;"></span>
@@ -232,7 +235,10 @@ td.td-company{font-weight:700;color:var(--text);}
   <div class="section-gap">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
       <div class="section-label" style="margin-bottom:0;">Contacts Tracker</div>
-      <span id="table-count" style="font-size:12px;color:var(--muted);"></span>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span id="table-count" style="font-size:12px;color:var(--muted);"></span>
+        <button class="btn-edit" id="btn-add-contact" style="padding:6px 16px;font-size:12px;border-radius:100px;">+ Add Contact</button>
+      </div>
     </div>
     <div class="filter-bar">
       <select class="filter-select" id="filter-member" onchange="applyFilters()">
@@ -294,7 +300,7 @@ td.td-company{font-weight:700;color:var(--text);}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
-  getFirestore, collection, doc, getDoc, getDocs,
+  getFirestore, collection, doc, getDoc, getDocs, addDoc,
   updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -600,6 +606,52 @@ window.toggleAdmin = async function(uid, name, checkbox){
     toast(`${name} is now ${grant?'an admin':'a member'}.`);
     await loadUsers();
   } catch(e){ checkbox.checked=!grant; toast('Error: '+e.message,false); }
+};
+
+/* ── Add Contact (admin) ── */
+document.getElementById('btn-add-contact').onclick = function(){
+  const row = document.createElement('tr');
+  row.classList.add('editing');
+  row.innerHTML = `
+    <td class="td-num">+</td>
+    <td><input class="inline-input" id="ni-company" placeholder="Company name"/></td>
+    <td><select class="inline-select" id="ni-type">
+      ${['sponsor','speaker','judge','mentor','partner'].map(t=>`<option value="${t}">${t}</option>`).join('')}
+    </select></td>
+    <td><input class="inline-input" id="ni-person" placeholder="Contact person"/></td>
+    <td><input class="inline-input" id="ni-email" placeholder="Email"/></td>
+    <td><input class="inline-input" id="ni-date" type="date" value="${new Date().toISOString().split('T')[0]}"/></td>
+    <td><select class="inline-select" id="ni-status">
+      ${['pending','contacted','discussing','confirmed','declined'].map(s=>`<option value="${s}">${s}</option>`).join('')}
+    </select></td>
+    <td colspan="2"><input class="inline-input" id="ni-notes" placeholder="Notes"/></td>
+    <td style="white-space:nowrap">
+      <button class="btn-save" onclick="saveNewContact(this)">Save</button>
+      <button class="btn-cancel" onclick="this.closest('tr').remove()">Cancel</button>
+    </td>`;
+  const tbody = document.getElementById('contacts-tbody');
+  tbody.insertBefore(row, tbody.firstChild);
+  document.getElementById('ni-company').focus();
+};
+
+window.saveNewContact = async function(btn){
+  const company = document.getElementById('ni-company').value.trim();
+  if(!company){ toast('Company name required.',false); return; }
+  try{
+    await addDoc(collection(db,'contacts'),{
+      company,
+      type:          document.getElementById('ni-type').value,
+      contactPerson: document.getElementById('ni-person').value.trim(),
+      email:         document.getElementById('ni-email').value.trim(),
+      date:          document.getElementById('ni-date').value,
+      status:        document.getElementById('ni-status').value,
+      notes:         document.getElementById('ni-notes').value.trim(),
+      addedBy:       auth.currentUser.uid,
+      addedByName:   document.getElementById('nav-name').textContent,
+      lastUpdated:   serverTimestamp()
+    });
+    toast('Contact added ✓');
+  } catch(e){ toast('Error: '+e.message, false); }
 };
 
 /* ── Demo mode (unconfigured) ── */

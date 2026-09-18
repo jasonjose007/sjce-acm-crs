@@ -85,8 +85,8 @@
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signOut, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const MEMBERS = [
@@ -103,6 +103,13 @@ function log(msg, type='info') {
   el.className = `log-item log-${type}`;
   el.textContent = `${icons[type]} ${msg}`;
   document.getElementById('log').appendChild(el);
+}
+
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Timed out after ' + ms + 'ms')), ms))
+  ]);
 }
 
 window.runSetup = async function() {
@@ -125,37 +132,60 @@ window.runSetup = async function() {
     return;
   }
 
-  let app, auth, db;
-  try {
-    app  = initializeApp(config, 'setup');
-    auth = getAuth(app);
-    db   = getFirestore(app);
-    log('Firebase initialised', 'ok');
-  } catch(e) {
-    log(`Firebase init failed: ${e.message}`, 'err');
-    btn.disabled = false; btn.textContent = '🚀 Create All Team Accounts';
-    return;
-  }
-
+  // Phase 1: Create all Auth accounts
+  log('Phase 1: Creating Auth accounts...', 'info');
+  const created = [];
   let allOk = true;
-  for (const m of MEMBERS) {
+
+  for (let i = 0; i < MEMBERS.length; i++) {
+    const m = MEMBERS[i];
+    let tempApp;
     try {
-      const cred = await createUserWithEmailAndPassword(auth, m.email, m.password);
-      await setDoc(doc(db, 'users', cred.user.uid), {
-        name: m.name, email: m.email, role: m.role,
-        avatar: m.avatar, color: m.color,
-        createdAt: serverTimestamp()
-      });
-      log(`Created: ${m.name} (${m.role})`, 'ok');
+      tempApp = initializeApp(config, 'auth-' + i + '-' + Date.now());
+      const tempAuth = getAuth(tempApp);
+      const cred = await withTimeout(createUserWithEmailAndPassword(tempAuth, m.email, m.password), 10000);
+      created.push({ ...m, uid: cred.user.uid });
+      log(`Auth created: ${m.name}`, 'ok');
+      await signOut(tempAuth);
     } catch(e) {
       if (e.code === 'auth/email-already-in-use') {
-        log(`${m.name} — already exists (skipped)`, 'info');
+        created.push({ ...m, uid: null });
+        log(`${m.name} — Auth account already exists`, 'info');
       } else {
-        log(`${m.name} failed: ${e.message}`, 'err');
+        log(`${m.name} Auth failed: ${e.message}`, 'err');
         allOk = false;
       }
     }
+    try { if (tempApp) await deleteApp(tempApp); } catch(_) {}
   }
+
+  // Phase 2: Write Firestore user docs (sign in as each user to get UID)
+  log('Phase 2: Writing Firestore user profiles...', 'info');
+  const mainApp = initializeApp(config, 'firestore-' + Date.now());
+  const db = getFirestore(mainApp);
+
+  for (let i = 0; i < created.length; i++) {
+    const m = created[i];
+    let loginApp;
+    try {
+      loginApp = initializeApp(config, 'login-' + i + '-' + Date.now());
+      const loginAuth = getAuth(loginApp);
+      const cred = await withTimeout(signInWithEmailAndPassword(loginAuth, m.email, m.password), 10000);
+      const uid = cred.user.uid;
+      await withTimeout(setDoc(doc(db, 'users', uid), {
+        name: m.name, email: m.email, role: m.role,
+        avatar: m.avatar, color: m.color,
+        createdAt: serverTimestamp()
+      }), 10000);
+      log(`Firestore profile saved: ${m.name}`, 'ok');
+      await signOut(loginAuth);
+    } catch(e) {
+      log(`${m.name} Firestore failed: ${e.message}`, 'err');
+      allOk = false;
+    }
+    try { if (loginApp) await deleteApp(loginApp); } catch(_) {}
+  }
+  try { await deleteApp(mainApp); } catch(_) {}
 
   btn.textContent = allOk ? '✅ Done!' : '⚠️ Partial — check errors';
   if (allOk) document.getElementById('doneBanner').style.display = 'block';

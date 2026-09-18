@@ -1,3 +1,9 @@
 .vercel
 .env*
 credentials.html
+node_modules/
+package.json
+package-lock.json
+firebase.json
+firestore.rules
+firestore.indexes.json
