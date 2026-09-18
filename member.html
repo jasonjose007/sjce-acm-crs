@@ -141,6 +141,8 @@ td.td-notes{max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ell
 }
 .btn-edit{background:rgba(59,130,246,.1);color:var(--blue);}
 .btn-edit:hover{background:rgba(59,130,246,.25);}
+.btn-action{width:28px;height:28px;border-radius:7px;border:none;display:flex;align-items:center;justify-content:center;font-size:13px;transition:var(--t);background:rgba(16,185,129,.1);color:var(--green);}
+.btn-action:hover{background:rgba(16,185,129,.25);}
 .btn-del{background:rgba(239,68,68,.1);color:var(--red);}
 .btn-del:hover{background:rgba(239,68,68,.25);}
 .email-link{color:var(--blue);font-size:.8rem;white-space:nowrap;}
@@ -361,7 +363,7 @@ textarea.modal-input{resize:vertical;min-height:80px;}
     <!-- My Contacts -->
     <div class="section">
       <div class="section-head">
-        <div class="section-title">📋 My Contacts</div>
+        <div class="section-title">📋 All Team Contacts</div>
         <button class="btn-add" id="btn-add-contact">+ Add Contact</button>
       </div>
       <div id="contacts-area">
@@ -657,8 +659,8 @@ function renderContacts(docs) {
     return;
   }
   const rows = docs.map((d, i) => {
-    const emailBtn = d.email ? `<a class="btn-edit" href="mailto:${esc(d.email)}" title="Email ${esc(d.contactPerson||d.company)}" style="text-decoration:none;display:inline-flex;">📧</a>` : '';
-    const phoneBtn = d.phone ? `<a class="btn-edit" href="tel:${esc(d.phone)}" title="Call ${esc(d.phone)}" style="text-decoration:none;display:inline-flex;">📞</a>` : '';
+    const emailBtn = d.email ? `<a class="btn-action" href="mailto:${esc(d.email)}" title="Email ${esc(d.contactPerson||d.company)}" style="text-decoration:none;display:inline-flex;">📧</a>` : '';
+    const phoneBtn = d.phone ? `<a class="btn-action" href="tel:${esc(d.phone)}" title="Call ${esc(d.phone)}" style="text-decoration:none;display:inline-flex;">📞</a>` : '';
     return `<tr>
       <td class="td-num">${String(i+1).padStart(2,'0')}</td>
       <td class="td-company">${esc(d.company||'—')}</td>
