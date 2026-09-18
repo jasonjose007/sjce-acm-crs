@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRS — One-Time Setup</title>
+  <style>
+    :root {
+      --bg:#07091a; --surface:#0d1228; --border:#1a2340;
+      --blue:#3b82f6; --violet:#8b5cf6; --green:#10b981; --red:#ef4444; --amber:#fbbf24;
+      --text:#eef2ff; --muted:#8898b8; --dim:#3d4f72;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px;max-width:560px;width:100%}
+    .logo{display:flex;align-items:center;gap:10px;margin-bottom:32px}
+    .logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--blue),var(--violet));border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px}
+    .logo-text{font-size:14px;font-weight:800;line-height:1.2}
+    .logo-text small{display:block;font-size:10px;color:var(--muted);font-weight:400;text-transform:uppercase;letter-spacing:1px}
+    h1{font-size:1.5rem;font-weight:900;margin-bottom:8px}
+    .subtitle{font-size:.875rem;color:var(--muted);margin-bottom:28px;line-height:1.6}
+    .warning{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:12px;padding:14px 18px;font-size:.8rem;color:#fde68a;margin-bottom:28px;display:flex;gap:10px;align-items:flex-start}
+    label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700;margin-bottom:6px}
+    input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px 14px;font-size:.9rem;color:var(--text);outline:none;transition:.2s;margin-bottom:16px;font-family:inherit}
+    input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+    .btn{width:100%;padding:13px;border-radius:100px;border:none;font-size:15px;font-weight:800;cursor:pointer;transition:.2s;margin-top:8px}
+    .btn-primary{background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;box-shadow:0 4px 20px rgba(59,130,246,.3)}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(59,130,246,.4)}
+    .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    #log{margin-top:24px;display:flex;flex-direction:column;gap:8px}
+    .log-item{padding:10px 14px;border-radius:10px;font-size:.8rem;display:flex;align-items:center;gap:10px}
+    .log-ok{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);color:#6ee7b7}
+    .log-err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
+    .log-info{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);color:#93c5fd}
+    .done-banner{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(6,182,212,.1));border:1px solid rgba(16,185,129,.3);border-radius:14px;padding:20px;text-align:center;margin-top:20px;display:none}
+    .done-banner h3{font-size:1rem;font-weight:800;margin-bottom:6px;color:#6ee7b7}
+    .done-banner p{font-size:.825rem;color:var(--muted)}
+    .steps{counter-reset:s;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+    .step{display:flex;gap:12px;align-items:flex-start;padding:12px 16px;background:rgba(255,255,255,.02);border-radius:10px;border:1px solid var(--border);font-size:.85rem;color:var(--muted)}
+    .step::before{counter-increment:s;content:counter(s);min-width:24px;height:24px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div class="logo-icon">A</div>
+    <div class="logo-text">SJCE ACM <small>CRS Team Setup</small></div>
+  </div>
+
+  <h1>🔧 One-Time Setup</h1>
+  <p class="subtitle">Run this once to create all 5 team member accounts in Firebase. After this page is done, delete or don't deploy it.</p>
+
+  <div class="warning">
+    ⚠️ <span>Make sure you've created your Firebase project and enabled <strong>Firestore</strong> and <strong>Email/Password Authentication</strong> before running setup.</span>
+  </div>
+
+  <p style="font-size:.825rem;color:var(--muted);margin-bottom:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Before you begin:</p>
+  <div class="steps">
+    <div class="step">Go to <strong style="color:var(--text)">console.firebase.google.com</strong> → Create Project → name it "sjce-acm-crs"</div>
+    <div class="step">Build → Firestore Database → Create database → Start in <strong style="color:var(--text)">test mode</strong></div>
+    <div class="step">Build → Authentication → Get Started → Email/Password → Enable</div>
+    <div class="step">Project Settings (gear icon) → Your Apps → Add Web App → Copy the config object</div>
+    <div class="step">Paste each config value below and click Initialize</div>
+  </div>
+
+  <label>API Key</label>
+  <input type="text" id="apiKey" placeholder="AIzaSy..." />
+  <label>Auth Domain</label>
+  <input type="text" id="authDomain" placeholder="your-project.firebaseapp.com" />
+  <label>Project ID</label>
+  <input type="text" id="projectId" placeholder="your-project-id" />
+  <label>Storage Bucket</label>
+  <input type="text" id="storageBucket" placeholder="your-project.firebasestorage.app" />
+  <label>Messaging Sender ID</label>
+  <input type="text" id="messagingSenderId" placeholder="123456789" />
+  <label>App ID</label>
+  <input type="text" id="appId" placeholder="1:123456:web:abc..." />
+
+  <button class="btn btn-primary" id="setupBtn" onclick="runSetup()">🚀 Create All Team Accounts</button>
+  <div id="log"></div>
+  <div class="done-banner" id="doneBanner">
+    <h3>✅ Setup Complete!</h3>
+    <p>All 5 accounts created. Now paste the Firebase config into <code>login.html</code>, <code>admin.html</code>, and <code>member.html</code> where it says <code>REPLACE_API_KEY</code> etc. Then you can delete or unlist this page.</p>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const MEMBERS = [
+  { name:"Jason J",         email:"jason.j@sjce-acm-crs.app",    password:"CRS-Jason-26",    role:"admin",  avatar:"JJ", color:"linear-gradient(135deg,#3b82f6,#8b5cf6)" },
+  { name:"Kaniska Praba",   email:"kaniska.p@sjce-acm-crs.app",  password:"CRS-Kaniska-26",  role:"member", avatar:"KP", color:"linear-gradient(135deg,#6366f1,#8b5cf6)" },
+  { name:"Harini S",        email:"harini.s@sjce-acm-crs.app",   password:"CRS-Harini-26",   role:"member", avatar:"HS", color:"linear-gradient(135deg,#06b6d4,#3b82f6)" },
+  { name:"Patricia Mary G", email:"patricia.m@sjce-acm-crs.app", password:"CRS-Patricia-26", role:"member", avatar:"PM", color:"linear-gradient(135deg,#8b5cf6,#ec4899)" },
+  { name:"Vignesh",         email:"vignesh.v@sjce-acm-crs.app",  password:"CRS-Vignesh-26",  role:"member", avatar:"V",  color:"linear-gradient(135deg,#10b981,#06b6d4)" },
+];
+
+function log(msg, type='info') {
+  const icons = { ok:'✅', err:'❌', info:'⏳' };
+  const el = document.createElement('div');
+  el.className = `log-item log-${type}`;
+  el.textContent = `${icons[type]} ${msg}`;
+  document.getElementById('log').appendChild(el);
+}
+
+window.runSetup = async function() {
+  const btn = document.getElementById('setupBtn');
+  btn.disabled = true; btn.textContent = '⏳ Setting up...';
+  document.getElementById('log').innerHTML = '';
+
+  const config = {
+    apiKey:            document.getElementById('apiKey').value.trim(),
+    authDomain:        document.getElementById('authDomain').value.trim(),
+    projectId:         document.getElementById('projectId').value.trim(),
+    storageBucket:     document.getElementById('storageBucket').value.trim(),
+    messagingSenderId: document.getElementById('messagingSenderId').value.trim(),
+    appId:             document.getElementById('appId').value.trim(),
+  };
+
+  if (!config.apiKey || !config.projectId) {
+    log('Please fill in at least API Key and Project ID.', 'err');
+    btn.disabled = false; btn.textContent = '🚀 Create All Team Accounts';
+    return;
+  }
+
+  let app, auth, db;
+  try {
+    app  = initializeApp(config, 'setup');
+    auth = getAuth(app);
+    db   = getFirestore(app);
+    log('Firebase initialised', 'ok');
+  } catch(e) {
+    log(`Firebase init failed: ${e.message}`, 'err');
+    btn.disabled = false; btn.textContent = '🚀 Create All Team Accounts';
+    return;
+  }
+
+  let allOk = true;
+  for (const m of MEMBERS) {
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, m.email, m.password);
+      await setDoc(doc(db, 'users', cred.user.uid), {
+        name: m.name, email: m.email, role: m.role,
+        avatar: m.avatar, color: m.color,
+        createdAt: serverTimestamp()
+      });
+      log(`Created: ${m.name} (${m.role})`, 'ok');
+    } catch(e) {
+      if (e.code === 'auth/email-already-in-use') {
+        log(`${m.name} — already exists (skipped)`, 'info');
+      } else {
+        log(`${m.name} failed: ${e.message}`, 'err');
+        allOk = false;
+      }
+    }
+  }
+
+  btn.textContent = allOk ? '✅ Done!' : '⚠️ Partial — check errors';
+  if (allOk) document.getElementById('doneBanner').style.display = 'block';
+}
+</script>
+</body>
+</html>
