@@ -590,7 +590,14 @@ function loadDashboard() {
   // Welcome banner
   document.getElementById('wb-hey').textContent = `Hey ${name.split(' ')[0]} 👋`;
   const today = new Date().toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-  document.getElementById('wb-sub').textContent = `${today} · CRS Team · SJCE ACM`;
+  document.getElementById('wb-sub').textContent = role === 'admin'
+    ? `${today} · CRS Team Lead · SJCE ACM`
+    : `${today} · CRS Team · SJCE ACM`;
+
+  // Update contacts section title for admin
+  if (role === 'admin') {
+    document.querySelector('.section-title').textContent = '📋 All Team Contacts';
+  }
   document.getElementById('welcome-banner').style.setProperty('--user-gradient',
     `linear-gradient(135deg,${color.match(/#[0-9a-f]{6}/gi)?.[0] || '#3b82f6'}22,${color.match(/#[0-9a-f]{6}/gi)?.[1] || '#8b5cf6'}11)`);
 
@@ -626,11 +633,10 @@ function loadDashboard() {
 
 /* ══════════════ CONTACTS ══════════════ */
 function subscribeContacts() {
-  const q = query(
-    collection(db, 'contacts'),
-    where('addedBy', '==', currentUser.uid),
-    orderBy('lastUpdated', 'desc')
-  );
+  const isAdmin = currentUserData.role === 'admin';
+  const q = isAdmin
+    ? query(collection(db, 'contacts'), orderBy('lastUpdated', 'desc'))
+    : query(collection(db, 'contacts'), where('addedBy', '==', currentUser.uid), orderBy('lastUpdated', 'desc'));
   if (contactsUnsub) contactsUnsub();
   contactsUnsub = onSnapshot(q, snap => {
     const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -656,26 +662,34 @@ function renderContacts(docs) {
     document.getElementById('btn-add-contact-empty').addEventListener('click', openAddModal);
     return;
   }
-  const rows = docs.map((d, i) => `
-    <tr>
+  const isAdmin = currentUserData.role === 'admin';
+  const rows = docs.map((d, i) => {
+    const emailBtn = d.email ? `<a class="btn-edit" href="mailto:${esc(d.email)}" title="Email ${esc(d.contactPerson||d.company)}" style="text-decoration:none;display:inline-flex;">📧</a>` : '';
+    const phoneBtn = d.phone ? `<a class="btn-edit" href="tel:${esc(d.phone)}" title="Call ${esc(d.phone)}" style="text-decoration:none;display:inline-flex;">📞</a>` : '';
+    const addedBy = isAdmin ? `<td style="font-size:.78rem">${esc(d.addedByName||'—')}</td>` : '';
+    return `<tr>
       <td class="td-num">${String(i+1).padStart(2,'0')}</td>
       <td class="td-company">${esc(d.company||'—')}</td>
       <td>${typeBadge(d.type||'sponsor')}</td>
       <td>${esc(d.contactPerson||'—')}</td>
       <td>${d.email ? `<a class="email-link" href="mailto:${esc(d.email)}">${esc(d.email)}</a>` : '—'}</td>
-      <td>${esc(d.date||'—')}</td>
+      <td>${esc(d.event||d.date||'—')}</td>
       <td>${statusBadge(d.status||'pending')}</td>
       <td class="td-notes" title="${esc(d.notes||'')}">${esc(d.notes||'—')}</td>
+      ${addedBy}
       <td>
         <div class="action-btns">
+          ${emailBtn}${phoneBtn}
           <button class="btn-edit" data-id="${d.id}" title="Edit">✏️</button>
           <button class="btn-del"  data-id="${d.id}" title="Delete">🗑️</button>
         </div>
       </td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
+  const addedByHeader = isAdmin ? '<th>Added By</th>' : '';
   area.innerHTML = `<div class="table-wrap"><table><thead><tr>
     <th>#</th><th>Company</th><th>Type</th><th>Contact Person</th><th>Email</th>
-    <th>Date</th><th>Status</th><th>Notes</th><th>Actions</th>
+    <th>Event</th><th>Status</th><th>Notes</th>${addedByHeader}<th>Actions</th>
   </tr></thead><tbody>${rows}</tbody></table></div>`;
 
   area.querySelectorAll('.btn-edit').forEach(btn =>
