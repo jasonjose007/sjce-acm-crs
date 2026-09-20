@@ -149,10 +149,35 @@ td.td-company{font-weight:700;color:var(--text);}
 /* ── Config warning ── */
 .config-warn{background:rgba(251,191,36,.06);border:1px dashed rgba(251,191,36,.25);border-radius:12px;padding:14px 18px;font-size:.825rem;color:#fde68a;display:flex;align-items:center;gap:10px;margin-bottom:24px;}
 
+/* ── Follow-up Reminders ── */
+.followup-section{margin-bottom:40px;}
+.followup-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;}
+.followup-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;display:flex;align-items:flex-start;gap:14px;transition:var(--t);}
+.followup-card:hover{border-color:rgba(59,130,246,.25);}
+.followup-card.overdue{border-left:4px solid var(--red);}
+.followup-card.today{border-left:4px solid var(--amber);}
+.followup-card.upcoming{border-left:4px solid var(--blue);}
+.fu-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.fu-icon.overdue{background:rgba(239,68,68,.12);color:#fca5a5;}
+.fu-icon.today{background:rgba(251,191,36,.12);color:#fde68a;}
+.fu-icon.upcoming{background:rgba(59,130,246,.12);color:#93c5fd;}
+.fu-company{font-size:.9rem;font-weight:800;margin-bottom:2px;}
+.fu-detail{font-size:.78rem;color:var(--muted);}
+.fu-date{font-size:.75rem;font-weight:700;margin-top:4px;}
+.fu-date.overdue{color:#fca5a5;}
+.fu-date.today{color:#fde68a;}
+.fu-date.upcoming{color:#93c5fd;}
+.fu-empty{text-align:center;padding:32px;color:var(--dim);font-size:.875rem;grid-column:1/-1;}
+.fu-tabs{display:flex;gap:8px;margin-bottom:14px;}
+.fu-tab{background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:11px;font-weight:700;padding:5px 14px;border-radius:100px;cursor:pointer;transition:var(--t);text-transform:uppercase;letter-spacing:.5px;}
+.fu-tab:hover,.fu-tab.active{color:var(--text);border-color:var(--blue);}
+.fu-tab .fu-count{background:rgba(239,68,68,.15);color:#fca5a5;font-size:10px;padding:1px 7px;border-radius:100px;margin-left:6px;}
+
 @media(max-width:640px){
   .page{padding:20px 14px;}
   .filter-bar{gap:7px;}
   .nav-title,.admin-badge,.nav-right .nav-name{display:none;}
+  .followup-cards{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -221,6 +246,20 @@ td.td-company{font-weight:700;color:var(--text);}
     </div>
   </div>
 
+  <!-- ── Follow-up Reminders ── -->
+  <div class="section-gap followup-section">
+    <div class="section-label">Follow-up Reminders</div>
+    <div class="fu-tabs">
+      <button class="fu-tab active" onclick="setFollowupTab('all')">All</button>
+      <button class="fu-tab" onclick="setFollowupTab('overdue')">Overdue <span class="fu-count" id="fu-overdue-count">0</span></button>
+      <button class="fu-tab" onclick="setFollowupTab('today')">Today</button>
+      <button class="fu-tab" onclick="setFollowupTab('upcoming')">Next 7 Days</button>
+    </div>
+    <div class="followup-cards" id="followup-cards">
+      <div class="fu-empty">No follow-ups scheduled.</div>
+    </div>
+  </div>
+
   <!-- ── Team Members ── -->
   <div class="section-gap">
     <div class="section-label">Team Members</div>
@@ -273,13 +312,14 @@ td.td-company{font-weight:700;color:var(--text);}
             <th>Email</th>
             <th>Date</th>
             <th>Status</th>
+            <th>Follow-up</th>
             <th>Added By</th>
             <th>Notes</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody id="contacts-tbody">
-          <tr class="empty-row"><td colspan="10">Loading contacts…</td></tr>
+          <tr class="empty-row"><td colspan="11">Loading contacts…</td></tr>
         </tbody>
       </table>
     </div>
@@ -341,6 +381,14 @@ function colorFor(uid){ return COLOR_MAP[uid] || '#3b82f6'; }
 
 function typeBadge(t){ const m={'sponsor':'bt-sponsor','speaker':'bt-speaker','judge':'bt-judge','mentor':'bt-mentor','partner':'bt-partner'}; return `<span class="badge ${m[t]||''}">${t||'—'}</span>`; }
 function statusBadge(s){ const m={'pending':'bs-pending','contacted':'bs-contacted','discussing':'bs-discussing','confirmed':'bs-confirmed','declined':'bs-declined'}; return `<span class="badge ${m[s]||'bs-pending'}">${s||'pending'}</span>`; }
+
+function followUpCell(dateStr) {
+  if (!dateStr) return '<span style="color:var(--dim)">—</span>';
+  const fu = new Date(dateStr + 'T00:00:00');
+  const now = new Date(); now.setHours(0,0,0,0);
+  const cls = fu < now ? 'overdue' : fu.getTime() === now.getTime() ? 'today' : 'upcoming';
+  return '<span class="fu-date ' + cls + '">' + dateStr + '</span>';
+}
 
 function toast(msg, ok=true){
   const t = document.getElementById('toast');
@@ -445,6 +493,7 @@ function subscribeContacts(){
     applyFilters();
     updateStats();
     renderMemberStrip();
+    renderFollowups();
   });
 }
 
@@ -489,7 +538,7 @@ function renderTable(rows){
   const tbody = document.getElementById('contacts-tbody');
   document.getElementById('table-count').textContent = `${rows.length} record${rows.length!==1?'s':''}`;
   if(!rows.length){
-    tbody.innerHTML = '<tr class="empty-row"><td colspan="10">No contacts found.</td></tr>';
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="11">No contacts found.</td></tr>';
     return;
   }
   tbody.innerHTML = rows.map((c,i)=>{
@@ -502,6 +551,7 @@ function renderTable(rows){
       <td>${c.email?`<a href="mailto:${esc(c.email)}" style="color:var(--blue)">${esc(c.email)}</a>`:'—'}</td>
       <td style="white-space:nowrap">${c.date||'—'}</td>
       <td>${statusBadge(c.status)}</td>
+      <td style="white-space:nowrap">${followUpCell(c.followUpDate)}</td>
       <td><span style="font-size:.78rem">${esc(addedName)}</span></td>
       <td class="td-notes" style="max-width:160px;font-size:.78rem">${esc(c.notes||'—')}</td>
       <td style="white-space:nowrap">
@@ -533,6 +583,7 @@ window.startEdit = function(id){
     <td><select class="inline-select" id="ei-status">
       ${['pending','contacted','discussing','confirmed','declined'].map(s=>`<option value="${s}"${c.status===s?' selected':''}>${s}</option>`).join('')}
     </select></td>
+    <td><input class="inline-input" id="ei-followup" type="date" value="${c.followUpDate||''}"/></td>
     <td colspan="2"><input class="inline-input" id="ei-notes" value="${esc(c.notes||'')}"/></td>
     <td style="white-space:nowrap">
       <button class="btn-save" onclick="saveEdit('${id}')">Save</button>
@@ -548,6 +599,7 @@ window.saveEdit = async function(id){
     email:         document.getElementById('ei-email').value.trim(),
     date:          document.getElementById('ei-date').value,
     status:        document.getElementById('ei-status').value,
+    followUpDate:  document.getElementById('ei-followup').value,
     notes:         document.getElementById('ei-notes').value.trim(),
     lastUpdated:   serverTimestamp()
   };
@@ -624,6 +676,7 @@ document.getElementById('btn-add-contact').onclick = function(){
     <td><select class="inline-select" id="ni-status">
       ${['pending','contacted','discussing','confirmed','declined'].map(s=>`<option value="${s}">${s}</option>`).join('')}
     </select></td>
+    <td><input class="inline-input" id="ni-followup" type="date"/></td>
     <td colspan="2"><input class="inline-input" id="ni-notes" placeholder="Notes"/></td>
     <td style="white-space:nowrap">
       <button class="btn-save" onclick="saveNewContact(this)">Save</button>
@@ -645,6 +698,7 @@ window.saveNewContact = async function(btn){
       email:         document.getElementById('ni-email').value.trim(),
       date:          document.getElementById('ni-date').value,
       status:        document.getElementById('ni-status').value,
+      followUpDate:  document.getElementById('ni-followup').value,
       notes:         document.getElementById('ni-notes').value.trim(),
       addedBy:       auth.currentUser.uid,
       addedByName:   document.getElementById('nav-name').textContent,
@@ -654,12 +708,82 @@ window.saveNewContact = async function(btn){
   } catch(e){ toast('Error: '+e.message, false); }
 };
 
+/* ── Follow-up Reminders ── */
+let followupTab = 'all';
+
+window.setFollowupTab = function(tab) {
+  followupTab = tab;
+  document.querySelectorAll('.fu-tab').forEach(t => {
+    const label = t.textContent.trim().toLowerCase();
+    const isActive = tab === 'all' ? label.startsWith('all')
+      : tab === 'overdue' ? label.startsWith('overdue')
+      : tab === 'today' ? label.startsWith('today')
+      : label.startsWith('next');
+    t.classList.toggle('active', isActive);
+  });
+  renderFollowups();
+};
+
+function renderFollowups() {
+  const container = document.getElementById('followup-cards');
+  if (!container) return;
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const weekLater = new Date(today);
+  weekLater.setDate(weekLater.getDate() + 7);
+
+  const withFollowup = allContacts.filter(c => c.followUpDate && c.status !== 'confirmed' && c.status !== 'declined');
+
+  const categorized = withFollowup.map(c => {
+    const fuDate = new Date(c.followUpDate + 'T00:00:00');
+    let category;
+    if (fuDate < today) category = 'overdue';
+    else if (fuDate.getTime() === today.getTime()) category = 'today';
+    else if (fuDate <= weekLater) category = 'upcoming';
+    else category = 'later';
+    return { ...c, fuDate, category };
+  }).sort((a, b) => a.fuDate - b.fuDate);
+
+  const overdueCount = categorized.filter(c => c.category === 'overdue').length;
+  const countEl = document.getElementById('fu-overdue-count');
+  if (countEl) countEl.textContent = overdueCount;
+
+  let filtered = categorized;
+  if (followupTab === 'overdue') filtered = categorized.filter(c => c.category === 'overdue');
+  else if (followupTab === 'today') filtered = categorized.filter(c => c.category === 'today');
+  else if (followupTab === 'upcoming') filtered = categorized.filter(c => c.category === 'upcoming');
+  else filtered = categorized.filter(c => c.category !== 'later');
+
+  if (!filtered.length) {
+    container.innerHTML = '<div class="fu-empty">No follow-ups ' + (followupTab === 'all' ? 'scheduled' : 'in this category') + '.</div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(c => {
+    const addedName = (allUsers.find(u => u.uid === c.addedBy) || {}).name || c.addedByName || '';
+    const dateStr = c.fuDate.toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+    const daysText = c.category === 'overdue'
+      ? Math.ceil((today - c.fuDate) / 86400000) + ' days overdue'
+      : c.category === 'today' ? 'Due today'
+      : 'In ' + Math.ceil((c.fuDate - today) / 86400000) + ' days';
+    return `<div class="followup-card ${c.category}">
+      <div class="fu-icon ${c.category}">${c.category === 'overdue' ? '🔴' : c.category === 'today' ? '🟡' : '🔵'}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="fu-company">${esc(c.company || '—')}</div>
+        <div class="fu-detail">${esc(c.contactPerson || '')}${c.contactPerson && addedName ? ' · ' : ''}${addedName ? 'by ' + esc(addedName) : ''}</div>
+        <div class="fu-detail">${statusBadge(c.status)} ${typeBadge(c.type)}</div>
+        <div class="fu-date ${c.category}">${dateStr} — ${daysText}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 /* ── Demo mode (unconfigured) ── */
 function loadDemoMode(){
   const demo = [
-    {id:'d1',company:'TechCorp India',type:'sponsor',contactPerson:'Rajan M',email:'rajan@techcorp.in',date:'2026-09-01',status:'confirmed',notes:'Confirmed ₹10k',addedBy:'u1',addedByName:'Jason J',lastUpdated:{}},
-    {id:'d2',company:'CloudBase Solutions',type:'partner',contactPerson:'Priya S',email:'priya@cloudbase.io',date:'2026-09-05',status:'discussing',notes:'Follow up pending',addedBy:'u2',addedByName:'Kaniska Praba',lastUpdated:{}},
-    {id:'d3',company:'AI Research Lab',type:'speaker',contactPerson:'Dr. Mehta',email:'mehta@ailab.edu',date:'2026-09-10',status:'contacted',notes:'Awaiting reply',addedBy:'u3',addedByName:'Harini S',lastUpdated:{}},
+    {id:'d1',company:'TechCorp India',type:'sponsor',contactPerson:'Rajan M',email:'rajan@techcorp.in',date:'2026-09-01',status:'confirmed',notes:'Confirmed ₹10k',addedBy:'u1',addedByName:'Jason J',lastUpdated:{},followUpDate:''},
+    {id:'d2',company:'CloudBase Solutions',type:'partner',contactPerson:'Priya S',email:'priya@cloudbase.io',date:'2026-09-05',status:'discussing',notes:'Follow up pending',addedBy:'u2',addedByName:'Kaniska Praba',lastUpdated:{},followUpDate:'2026-09-22'},
+    {id:'d3',company:'AI Research Lab',type:'speaker',contactPerson:'Dr. Mehta',email:'mehta@ailab.edu',date:'2026-09-10',status:'contacted',notes:'Awaiting reply',addedBy:'u3',addedByName:'Harini S',lastUpdated:{},followUpDate:'2026-09-18'},
   ];
   const demoUsers = [
     {uid:'u1',name:'Jason J',role:'admin',color:'#3b82f6'},
@@ -672,6 +796,7 @@ function loadDemoMode(){
   demoUsers.forEach((u,i)=>{ COLOR_MAP[u.uid]=u.color; });
   setNavUser(demoUsers[0]);
   updateStats(); renderMemberStrip(); populateMemberDropdown(); applyFilters();
+  renderFollowups();
   renderAdminControlsDemo();
   document.getElementById('loading').style.display='none';
   document.getElementById('main-content').style.display='block';
