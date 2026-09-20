@@ -419,80 +419,66 @@
     }
     .footer-back:hover { color:var(--blue); }
 
-    /* ── Tracker ── */
-    #tracker { background: var(--bg); border-top: 1px solid var(--border); }
-    .tracker-header { margin-bottom: 36px; }
-    .tracker-header .label { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:#10b981; font-weight:700; margin-bottom:12px; }
-    .tracker-header h2 { font-size:clamp(1.8rem,4vw,2.5rem); font-weight:900; letter-spacing:-.5px; margin-bottom:10px; }
-    .tracker-header p { font-size:.9rem; color:var(--muted); max-width:600px; }
-    .tracker-meta {
+    /* ── Events & Sponsors ── */
+    #events { background: var(--bg); border-top: 1px solid var(--border); }
+    .events-header { margin-bottom: 48px; }
+    .events-header .label { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:#10b981; font-weight:700; margin-bottom:12px; }
+    .events-header h2 { font-size:clamp(1.8rem,4vw,2.5rem); font-weight:900; letter-spacing:-.5px; margin-bottom:10px; }
+    .events-header p { font-size:.9rem; color:var(--muted); max-width:600px; }
+    .events-list { display:flex; flex-direction:column; gap:16px; }
+    .evt {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:20px; overflow:hidden; transition:var(--t);
+    }
+    .evt:hover { border-color:rgba(59,130,246,.25); }
+    .evt.open { border-color:rgba(59,130,246,.4); box-shadow:0 8px 40px rgba(0,0,0,.3); }
+    .evt-trigger {
       display:flex; align-items:center; justify-content:space-between;
-      flex-wrap:wrap; gap:12px; margin-bottom:20px;
+      padding:24px 28px; cursor:pointer; gap:16px; flex-wrap:wrap;
+      transition:var(--t);
     }
-    .tracker-legend { display:flex; gap:10px; flex-wrap:wrap; }
-    .legend-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); }
-    .legend-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
-    .tracker-note {
-      display:flex; align-items:center; gap:8px;
-      font-size:12px; color:var(--muted);
-      background:rgba(16,185,129,.06); border:1px solid rgba(16,185,129,.15);
-      border-radius:8px; padding:8px 14px;
+    .evt-trigger:hover { background:rgba(255,255,255,.015); }
+    .evt-left { display:flex; align-items:center; gap:16px; }
+    .evt-icon {
+      width:52px; height:52px; border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:24px; flex-shrink:0;
     }
-    .tracker-table-wrap { overflow-x:auto; border-radius:16px; border:1px solid var(--border); }
-    table { width:100%; border-collapse:collapse; }
-    thead th {
-      background:var(--surface2); color:var(--muted);
-      font-size:10px; text-transform:uppercase; letter-spacing:1.2px;
-      padding:14px 16px; text-align:left; font-weight:700;
-      white-space:nowrap;
+    .evi-blue   { background:rgba(59,130,246,.12); border:1px solid rgba(59,130,246,.2); }
+    .evi-purple { background:rgba(139,92,246,.12); border:1px solid rgba(139,92,246,.2); }
+    .evi-orange { background:rgba(249,115,22,.12); border:1px solid rgba(249,115,22,.2); }
+    .evt-info h3 { font-size:1.05rem; font-weight:800; margin-bottom:3px; }
+    .evt-info p  { font-size:.8rem; color:var(--muted); }
+    .evt-right { display:flex; align-items:center; gap:12px; }
+    .evt-stat { text-align:center; padding:5px 14px; background:var(--bg); border:1px solid var(--border); border-radius:10px; min-width:64px; }
+    .evt-stat-num { font-size:1.2rem; font-weight:900; line-height:1; }
+    .esn-blue { color:#93c5fd; } .esn-green { color:#6ee7b7; } .esn-red { color:#fca5a5; }
+    .evt-stat-label { font-size:8px; text-transform:uppercase; letter-spacing:.7px; color:var(--dim); margin-top:2px; }
+    .evt-arrow { font-size:16px; color:var(--dim); transition:var(--t); }
+    .evt.open .evt-arrow { transform:rotate(180deg); color:var(--blue); }
+    .evt-body { max-height:0; overflow:hidden; transition:max-height .45s ease; }
+    .evt.open .evt-body { max-height:600px; }
+    .evt-body-inner { padding:0 28px 28px; }
+    .evt-divider { height:1px; background:var(--border); margin:0 28px 20px; }
+    .evt-hint { font-size:.75rem; color:var(--dim); margin-bottom:14px; display:flex; align-items:center; gap:6px; }
+    .sponsors-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px; }
+    .sp-card {
+      background:var(--bg); border:1px solid var(--border);
+      border-radius:12px; padding:14px 16px;
+      transition:var(--t); display:flex; flex-direction:column; gap:6px;
     }
-    tbody tr { border-top:1px solid var(--border); transition:var(--t); }
-    tbody tr:hover { background:rgba(255,255,255,.02); }
-    td { padding:14px 16px; font-size:.875rem; color:var(--muted); vertical-align:middle; }
-    td.td-num { color:var(--dim); font-size:.8rem; font-weight:700; width:40px; }
-    td.td-company { font-weight:700; color:var(--text); }
-    .type-badge {
-      font-size:10px; font-weight:800; text-transform:uppercase;
-      letter-spacing:.8px; padding:3px 10px; border-radius:100px;
-      white-space:nowrap;
+    .sp-card:hover { border-color:rgba(59,130,246,.3); transform:translateY(-2px); }
+    .sp-name { font-size:.875rem; font-weight:800; }
+    .sp-type {
+      font-size:9px; font-weight:800; text-transform:uppercase;
+      letter-spacing:.7px; padding:2px 8px; border-radius:100px; width:fit-content;
     }
-    .tb-sponsor  { background:rgba(59,130,246,.12);  color:#93c5fd;  border:1px solid rgba(59,130,246,.25); }
-    .tb-speaker  { background:rgba(139,92,246,.12);  color:#c4b5fd;  border:1px solid rgba(139,92,246,.25); }
-    .tb-judge    { background:rgba(249,115,22,.12);   color:#fdba74;  border:1px solid rgba(249,115,22,.25); }
-    .tb-mentor   { background:rgba(6,182,212,.12);    color:#67e8f9;  border:1px solid rgba(6,182,212,.25); }
-    .tb-partner  { background:rgba(251,191,36,.12);   color:#fde68a;  border:1px solid rgba(251,191,36,.25); }
-    .status-badge {
-      display:inline-flex; align-items:center; gap:6px;
-      font-size:10px; font-weight:800; text-transform:uppercase;
-      letter-spacing:.8px; padding:4px 11px; border-radius:100px;
-      white-space:nowrap;
-    }
-    .status-badge::before { content:''; width:6px;height:6px;border-radius:50%;flex-shrink:0; }
-    .sb-contacted   { background:rgba(59,130,246,.1);  color:#93c5fd;  border:1px solid rgba(59,130,246,.2); }
-    .sb-contacted::before   { background:#3b82f6; }
-    .sb-discussing  { background:rgba(251,191,36,.1);  color:#fde68a;  border:1px solid rgba(251,191,36,.2); }
-    .sb-discussing::before  { background:#fbbf24; }
-    .sb-confirmed   { background:rgba(16,185,129,.1);  color:#6ee7b7;  border:1px solid rgba(16,185,129,.2); }
-    .sb-confirmed::before   { background:#10b981; }
-    .sb-declined    { background:rgba(239,68,68,.1);   color:#fca5a5;  border:1px solid rgba(239,68,68,.2); }
-    .sb-declined::before    { background:#ef4444; }
-    .sb-pending     { background:rgba(100,116,139,.1); color:#94a3b8;  border:1px solid rgba(100,116,139,.2); }
-    .sb-pending::before     { background:#64748b; }
-    .followup-btn {
-      display:inline-flex; align-items:center; gap:5px;
-      font-size:11px; font-weight:700; color:var(--blue);
-      padding:4px 12px; border:1px solid rgba(59,130,246,.2);
-      border-radius:100px; text-decoration:none; transition:var(--t);
-      white-space:nowrap;
-    }
-    .followup-btn:hover { background:rgba(59,130,246,.1); border-color:var(--blue); text-decoration:none; }
-    .td-notes { font-size:.8rem; color:var(--dim); max-width:180px; }
-    .empty-row td { text-align:center; padding:48px; color:var(--dim); font-style:italic; }
-    .tracker-excel-note {
-      margin-top:16px; padding:14px 20px;
-      background:rgba(251,191,36,.05); border:1px dashed rgba(251,191,36,.2);
-      border-radius:12px; font-size:.825rem; color:var(--muted);
-      display:flex; align-items:center; gap:10px;
+    .spt-sponsor { background:rgba(59,130,246,.12); color:#93c5fd; border:1px solid rgba(59,130,246,.2); }
+    .spt-partner { background:rgba(251,191,36,.12); color:#fde68a; border:1px solid rgba(251,191,36,.2); }
+    .sp-note { font-size:.72rem; color:var(--dim); line-height:1.4; }
+    .evt-click-hint {
+      text-align:center; padding:16px; font-size:.8rem; color:var(--dim);
+      display:flex; align-items:center; justify-content:center; gap:8px;
     }
 
     @media(max-width:768px) {
@@ -523,7 +509,7 @@
       CRS Team
     </div>
     <div style="display:flex;gap:10px;align-items:center;">
-      <a href="#tracker" class="back-link">📋 Outreach Tracker</a>
+      <a href="#events" class="back-link">📅 Our Events</a>
       <a href="login.html" class="back-link" style="background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.25);color:#93c5fd;">🔒 Team Login</a>
     </div>
   </div>
@@ -764,187 +750,210 @@
   </div>
 </section>
 
-<!-- ── TRACKER ── -->
-<section id="tracker" class="section">
+<!-- ── EVENTS & SPONSORS ── -->
+<section id="events" class="section">
   <div class="container">
-    <div class="tracker-header reveal">
-      <p class="label">Outreach History</p>
-      <h2>Past Event <span class="gt2">Outreach</span></h2>
-      <p>A record of companies and organisations the CRS team has reached out to for past events — Smart Femina, Iteryx'26, and Hack Sync 2.0. All events successfully completed.</p>
+    <div class="events-header reveal">
+      <p class="label">Our Events</p>
+      <h2>Events &amp; <span class="gt2">Sponsors</span></h2>
+      <p>Click any event to see the sponsors and partners who backed it. Every partnership here was built by the CRS team from scratch.</p>
     </div>
 
-    <div class="tracker-meta reveal">
-      <div class="tracker-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div> Contacted</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#fbbf24"></div> Follow-up</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> Confirmed</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> Declined</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#64748b"></div> Pending</div>
+    <div class="evt-click-hint reveal">
+      👆 Click an event card to expand and see its sponsors
+    </div>
+
+    <div class="events-list">
+
+      <!-- Smart Femina 2.0 -->
+      <div class="evt reveal" onclick="this.classList.toggle('open')">
+        <div class="evt-trigger">
+          <div class="evt-left">
+            <div class="evt-icon evi-purple">👩‍💻</div>
+            <div class="evt-info">
+              <h3>Smart Femina 2.0</h3>
+              <p>Women in tech — workshops, talks &amp; competitions</p>
+            </div>
+          </div>
+          <div class="evt-right">
+            <div class="evt-stat"><div class="evt-stat-num esn-blue">5</div><div class="evt-stat-label">Partners</div></div>
+            <div class="evt-stat"><div class="evt-stat-num esn-green">3</div><div class="evt-stat-label">Responded</div></div>
+            <span class="evt-arrow">▼</span>
+          </div>
+        </div>
+        <div class="evt-body">
+          <div class="evt-divider"></div>
+          <div class="evt-body-inner">
+            <div class="evt-hint">🤝 Sponsors &amp; Partners for this event</div>
+            <div class="sponsors-grid">
+              <div class="sp-card">
+                <span class="sp-type spt-sponsor">Sponsor</span>
+                <div class="sp-name">Atribs Global Technology</div>
+                <div class="sp-note">Non-monetary offer received</div>
+              </div>
+              <div class="sp-card">
+                <span class="sp-type spt-partner">Partner</span>
+                <div class="sp-name">Stigmata Techno Solutions</div>
+                <div class="sp-note">Outreach completed</div>
+              </div>
+              <div class="sp-card">
+                <span class="sp-type spt-partner">Partner</span>
+                <div class="sp-name">NovaNectar Services Pvt. Ltd</div>
+                <div class="sp-note">Outreach completed</div>
+              </div>
+              <div class="sp-card">
+                <span class="sp-type spt-partner">Partner</span>
+                <div class="sp-name">ECLearnix Edtech Pvt Ltd</div>
+                <div class="sp-note">Did not proceed</div>
+              </div>
+              <div class="sp-card">
+                <span class="sp-type spt-partner">Partner</span>
+                <div class="sp-name">Big Bucks Innovation Pvt Ltd</div>
+                <div class="sp-note">Follow-up completed</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="tracker-note">📋 Showing outreach from <strong>completed events</strong> — Smart Femina, Iteryx'26, Hack Sync 2.0</div>
-    </div>
 
-    <div class="tracker-table-wrap reveal">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Company / Organisation</th>
-            <th>Type</th>
-            <th>Contact Person</th>
-            <th>Event</th>
-            <th>Status</th>
-            <th>Notes</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="td-num">01</td>
-            <td class="td-company">Atribs Global Technology</td>
-            <td><span class="type-badge tb-sponsor">Sponsor</span></td>
-            <td>Miracline</td>
-            <td>Smart Femina</td>
-            <td><span class="status-badge sb-pending">—</span></td>
-            <td class="td-notes">Non-monetary offer received — under review</td>
-            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">📧 Contact</a></td>
-          </tr>
-          <tr>
-            <td class="td-num">02</td>
-            <td class="td-company">Ematix</td>
-            <td><span class="type-badge tb-partner">Partner</span></td>
-            <td>Tejeshwini</td>
-            <td>—</td>
-            <td><span class="status-badge sb-pending">—</span></td>
-            <td class="td-notes">Online internship offer received</td>
-            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">📧 Contact</a></td>
-          </tr>
-          <tr>
-            <td class="td-num">03</td>
-            <td class="td-company">Navan AI</td>
-            <td><span class="type-badge tb-sponsor">Sponsor</span></td>
-            <td>Jason</td>
-            <td>Hack Sync 2.0</td>
-            <td><span class="status-badge sb-contacted">Contacted</span></td>
-            <td class="td-notes">Reach-out sent</td>
-            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">📧 Contact</a></td>
-          </tr>
-          <tr>
-            <td class="td-num">04</td>
-            <td class="td-company">MaestroMinds</td>
-            <td><span class="type-badge tb-partner">Partner</span></td>
-            <td>Tejeswini</td>
-            <td>—</td>
-            <td><span class="status-badge sb-pending">—</span></td>
-            <td class="td-notes">Brochure sent, company reviewing</td>
-            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">📧 Contact</a></td>
-          </tr>
-          <tr>
-            <td class="td-num">05</td>
-            <td class="td-company">Corizo Edutech Pvt Ltd</td>
-            <td><span class="type-badge tb-partner">Partner</span></td>
-            <td>Tejeswini</td>
-            <td>—</td>
-            <td><span class="status-badge sb-pending">—</span></td>
-            <td class="td-notes">Reviewing — awaiting response</td>
-            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">📧 Contact</a></td>
-          </tr>
-          <tr>
-            <td class="td-num">06</td>
-            <td class="td-company">Big Bucks Innovation Pvt Ltd</td>
-            <td><span class="type-badge tb-sponsor">Sponsor</span></td>
-            <td>Miracline</td>
-            <td>—</td>
-            <td><span class="status-badge sb-contacted">Contacted</span></td>
-            <td class="td-notes">Follow-up email sent</td>
-            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">📧 Contact</a></td>
-          </tr>
-          <tr>
-            <td class="td-num">07</td>
-            <td class="td-company">YetToDo Chennai</td>
-            <td><span class="type-badge tb-partner">Partner</span></td>
-            <td>Jasmine</td>
-            <td>—</td>
-            <td><span class="status-badge sb-pending">—</span></td>
-            <td class="td-notes">Initial talk done, sending event details</td>
-            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">📧 Contact</a></td>
-          </tr>
-          <tr>
-            <td class="td-num">08</td>
-            <td class="td-company">Taqbit</td>
-            <td><span class="type-badge tb-sponsor">Sponsor</span></td>
-            <td>Jason</td>
-            <td>Hack Sync 2.0</td>
-            <td><span class="status-badge sb-contacted">Contacted</span></td>
-            <td class="td-notes">Reach-out sent</td>
-            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">📧 Contact</a></td>
-          </tr>
-          <tr>
-            <td class="td-num">09</td>
-            <td class="td-company">Astraalis AI</td>
-            <td><span class="type-badge tb-sponsor">Sponsor</span></td>
-            <td>Jason</td>
-            <td>Hack Sync 2.0</td>
-            <td><span class="status-badge sb-contacted">Contacted</span></td>
-            <td class="td-notes">Reach-out sent</td>
-            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">📧 Contact</a></td>
-          </tr>
-          <tr>
-            <td class="td-num">10</td>
-            <td class="td-company">Stigmata Techno Solutions</td>
-            <td><span class="type-badge tb-partner">Partner</span></td>
-            <td>Hitesh</td>
-            <td>Smart Femina / Iteryx</td>
-            <td><span class="status-badge sb-contacted">Contacted</span></td>
-            <td class="td-notes">Reach-out sent</td>
-            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">📧 Contact</a></td>
-          </tr>
-          <tr>
-            <td class="td-num">11</td>
-            <td class="td-company">NovaNectar Services Pvt. Ltd</td>
-            <td><span class="type-badge tb-partner">Partner</span></td>
-            <td>Hitesh</td>
-            <td>Smart Femina / Iteryx</td>
-            <td><span class="status-badge sb-contacted">Contacted</span></td>
-            <td class="td-notes">Reach-out sent</td>
-            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">📧 Contact</a></td>
-          </tr>
-          <tr>
-            <td class="td-num">12</td>
-            <td class="td-company">myproductsense</td>
-            <td><span class="type-badge tb-sponsor">Sponsor</span></td>
-            <td>Jason</td>
-            <td>Hack Sync 2.0</td>
-            <td><span class="status-badge sb-contacted">Contacted</span></td>
-            <td class="td-notes">Reach-out sent</td>
-            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">📧 Contact</a></td>
-          </tr>
-          <tr>
-            <td class="td-num">13</td>
-            <td class="td-company">Kimatsu India Pvt Ltd</td>
-            <td><span class="type-badge tb-sponsor">Sponsor</span></td>
-            <td>—</td>
-            <td>Iteryx</td>
-            <td><span class="status-badge sb-declined">Declined</span></td>
-            <td class="td-notes">Rejected</td>
-            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">📧 Contact</a></td>
-          </tr>
-          <tr>
-            <td class="td-num">14</td>
-            <td class="td-company">ECLearnix Edtech Pvt Ltd</td>
-            <td><span class="type-badge tb-partner">Partner</span></td>
-            <td>Hitesh</td>
-            <td>Smart Femina / Iteryx</td>
-            <td><span class="status-badge sb-declined">Declined</span></td>
-            <td class="td-notes">Rejected</td>
-            <td><a class="followup-btn" href="mailto:stjosephsacmcrs@gmail.com">📧 Contact</a></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <!-- Iteryx'26 -->
+      <div class="evt reveal d1" onclick="this.classList.toggle('open')">
+        <div class="evt-trigger">
+          <div class="evt-left">
+            <div class="evt-icon evi-blue">⚡</div>
+            <div class="evt-info">
+              <h3>Iteryx'26</h3>
+              <p>National-level technical symposium</p>
+            </div>
+          </div>
+          <div class="evt-right">
+            <div class="evt-stat"><div class="evt-stat-num esn-blue">4</div><div class="evt-stat-label">Partners</div></div>
+            <div class="evt-stat"><div class="evt-stat-num esn-red">1</div><div class="evt-stat-label">Declined</div></div>
+            <span class="evt-arrow">▼</span>
+          </div>
+        </div>
+        <div class="evt-body">
+          <div class="evt-divider"></div>
+          <div class="evt-body-inner">
+            <div class="evt-hint">🤝 Sponsors &amp; Partners for this event</div>
+            <div class="sponsors-grid">
+              <div class="sp-card">
+                <span class="sp-type spt-partner">Partner</span>
+                <div class="sp-name">Stigmata Techno Solutions</div>
+                <div class="sp-note">Outreach completed</div>
+              </div>
+              <div class="sp-card">
+                <span class="sp-type spt-partner">Partner</span>
+                <div class="sp-name">NovaNectar Services Pvt. Ltd</div>
+                <div class="sp-note">Outreach completed</div>
+              </div>
+              <div class="sp-card">
+                <span class="sp-type spt-sponsor">Sponsor</span>
+                <div class="sp-name">Kimatsu India Pvt Ltd</div>
+                <div class="sp-note">Declined</div>
+              </div>
+              <div class="sp-card">
+                <span class="sp-type spt-partner">Partner</span>
+                <div class="sp-name">ECLearnix Edtech Pvt Ltd</div>
+                <div class="sp-note">Did not proceed</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <div class="tracker-excel-note reveal">
-      📊 <span><strong>Data sourced from the ACM CRS outreach tracker.</strong> Showing 14 of 40+ companies contacted across Smart Femina 2.0, Iteryx'26 &amp; Hack Sync 2.0. Last updated: Sep 2026.</span>
+      <!-- Hack Sync 2.0 -->
+      <div class="evt reveal d2" onclick="this.classList.toggle('open')">
+        <div class="evt-trigger">
+          <div class="evt-left">
+            <div class="evt-icon evi-orange">💻</div>
+            <div class="evt-info">
+              <h3>Hack Sync 2.0</h3>
+              <p>24-hour national hackathon</p>
+            </div>
+          </div>
+          <div class="evt-right">
+            <div class="evt-stat"><div class="evt-stat-num esn-blue">4</div><div class="evt-stat-label">Sponsors</div></div>
+            <div class="evt-stat"><div class="evt-stat-num esn-green">4</div><div class="evt-stat-label">Contacted</div></div>
+            <span class="evt-arrow">▼</span>
+          </div>
+        </div>
+        <div class="evt-body">
+          <div class="evt-divider"></div>
+          <div class="evt-body-inner">
+            <div class="evt-hint">🤝 Sponsors approached for this event</div>
+            <div class="sponsors-grid">
+              <div class="sp-card">
+                <span class="sp-type spt-sponsor">Sponsor</span>
+                <div class="sp-name">Navan AI</div>
+                <div class="sp-note">Outreach sent</div>
+              </div>
+              <div class="sp-card">
+                <span class="sp-type spt-sponsor">Sponsor</span>
+                <div class="sp-name">Taqbit</div>
+                <div class="sp-note">Outreach sent</div>
+              </div>
+              <div class="sp-card">
+                <span class="sp-type spt-sponsor">Sponsor</span>
+                <div class="sp-name">Astraalis AI</div>
+                <div class="sp-note">Outreach sent</div>
+              </div>
+              <div class="sp-card">
+                <span class="sp-type spt-sponsor">Sponsor</span>
+                <div class="sp-name">myproductsense</div>
+                <div class="sp-note">Outreach sent</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- General Partnerships -->
+      <div class="evt reveal d3" onclick="this.classList.toggle('open')">
+        <div class="evt-trigger">
+          <div class="evt-left">
+            <div class="evt-icon" style="background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.2);">🌐</div>
+            <div class="evt-info">
+              <h3>General Partnerships</h3>
+              <p>Ongoing outreach not tied to a specific event</p>
+            </div>
+          </div>
+          <div class="evt-right">
+            <div class="evt-stat"><div class="evt-stat-num esn-blue">4</div><div class="evt-stat-label">Companies</div></div>
+            <div class="evt-stat"><div class="evt-stat-num esn-green">1</div><div class="evt-stat-label">Active</div></div>
+            <span class="evt-arrow">▼</span>
+          </div>
+        </div>
+        <div class="evt-body">
+          <div class="evt-divider"></div>
+          <div class="evt-body-inner">
+            <div class="evt-hint">🤝 Companies we're building relationships with</div>
+            <div class="sponsors-grid">
+              <div class="sp-card">
+                <span class="sp-type spt-partner">Partner</span>
+                <div class="sp-name">Ematix</div>
+                <div class="sp-note">Online internship offer received</div>
+              </div>
+              <div class="sp-card">
+                <span class="sp-type spt-partner">Partner</span>
+                <div class="sp-name">MaestroMinds</div>
+                <div class="sp-note">Brochure sent, under review</div>
+              </div>
+              <div class="sp-card">
+                <span class="sp-type spt-partner">Partner</span>
+                <div class="sp-name">Corizo Edutech Pvt Ltd</div>
+                <div class="sp-note">Awaiting response</div>
+              </div>
+              <div class="sp-card">
+                <span class="sp-type spt-partner">Partner</span>
+                <div class="sp-name">YetToDo Chennai</div>
+                <div class="sp-note">Initial talk done</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
